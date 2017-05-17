@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}핫 이슈{% endblock %}
+{% block extra_head_content %}
+{{ block.super }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+td.menuHotIssue {
+    width: 100px;
+    color: white;
+    background-color: #8298a6;
+    text-align: center;
+    border: 2px solid #8298a6;
+}
+td.menuRanking {
+    width: 100px;
+    color: white;
+    background-color: #6bb23c;
+    text-align: center;
+    border: 2px solid #6bb23c;
+}
+td.menuGizaDB {
+    width: 100px;
+    color: white;
+    background-color: #957248;
+    text-align: center;
+    border: 2px solid #957248;
+}
+td.issueRank {
+    width: 32px;
+    font-size: 150%;
+    color: yellow;
+}
+td.issueSubject {
+    font-size: 130%;
+}
+td.issueDown {
+    font-size: 75%;
+}
+a:link {color:white; text-decoration:none;}
+a:visited {color:white; text-decoration:none;}
+a:hover {color:yellow; text-decoration:none;}
+</style>
+{% endblock %}
+{% block content %}
+
+<table class="headMenu">
+<tr>
+    <td class="menuHotIssue"><a href="{% url 'show issues' %}">핫 이슈</a></td>
+    <td class="menuRanking">기레기 랭킹</td>
+    <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 DB</a></td>
+    <td class="headMenu"><a href="{% url 'new issue' %}"><img src="{% static 'icons/add24.png' %}" title="이슈 생성"></a></td>
+</tr>
+</table>
+<div class="issue">
+{% for issue in issues %}
+    <table class="issue">
+    <tr>
+        <td rowspan="2" class="issueRank">{{forloop.counter}}</td>
+        <td class="issueSubject"><a href={{issue.url}}>{{issue.subject}}</a></td>
+        {% if user.is_authenticated %}
+        <td rowspan="2" width="32px"><a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit24.png' %}" title="편집"></a></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td class="issueDown">{{issue.email}} ({{issue.count}}번 찍힘)</td>
+    </tr>
+    </table>
+    {% if not forloop.last %}
+        <hr>
+    {% endif %}
+
+{% endfor %}
+</div>
+{% endblock %}

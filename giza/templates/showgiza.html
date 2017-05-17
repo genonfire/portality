@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Giza db{% endblock %}
+{% block extra_head_content %}
+{{ block.super }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+{% block content %}
+
+{% for giza in db %}
+{{giza.id}}<br>
+{{giza.name}}<br>
+{{giza.email}}<br>
+{{giza.twitter}}<br>
+{{giza.facebook}}<br>
+{{giza.belongto}}<br>
+{{giza.portrait}}<br>
+{{giza.profile}}<br>
+{{giza.user}}<br>
+{% endfor %}
+
+{% endblock %}

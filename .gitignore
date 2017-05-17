@@ -1,0 +1,3 @@
+upload/
+*.pyc
+secrets.json
