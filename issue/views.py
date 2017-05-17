@@ -92,7 +92,6 @@ def api_issue(request):
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'POST':
         articleCheck = Issue.objects.filter(url=request.POST['url'])
-        print articleCheck.count()
         if articleCheck.count() == 1:
             serializer = IssueSerializer(data=request.POST)
             if serializer.is_valid():
@@ -104,4 +103,3 @@ def api_issue(request):
                 serializer.save()
                 return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
-

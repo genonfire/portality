@@ -15,26 +15,13 @@
     "48": "icon.png"
   },
   "permissions": [
-    "storage",
     "tabs",
     "activeTab",
-    "http://localhost:8000/*"
+    "http://localhost:8000/*",
+    "*.gencode.me/*"
   ],
-  // "content_scripts": [{
-  //   "matches": [ "*://*/*" ],
-  //   "js": ["content.js", "jquery-3.1.1.min.js"],
-  //   "run_at": "document_idle",
-  //   "all_frames": true
-  // }],
-  // "options_page": "options.html",
-  // "options_ui": {
-  //   "page": "options.html",
-  //   "chrome_style": false
-  // },
-  // "content_security_policy": "script-src 'self'; object-src 'self';",
   "manifest_version": 2,
   "name": "버스터 콜",
   "description": "현재 보고 있는 기사에 버스터 콜을 날립니다.",
-  // "web_accessible_resources": ["jquery-3.1.1.min.js"],
-  "version": "0.5"
+  "version": "0.6"
 }

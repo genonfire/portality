@@ -17,9 +17,7 @@ class IssueSerializer(serializers.Serializer):
             'email': validated_data.get('email', None),
             'count': 1
         })
-        print created
         if not created:
             issue.count = issue.count + 1
-            print "id: %d count: %d" % (issue.id, issue.count)
             issue.save()
         return issue
