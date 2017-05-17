@@ -11,7 +11,7 @@ class Issue(models.Model):
     url = models.CharField(max_length="255")
     archive = models.CharField(max_length="255", blank=True)
     datetime = models.DateTimeField(auto_now_add=True)
-    count = models.IntegerField(default=0)
+    count = models.IntegerField(default=1)
 
     def get_absolute_url(self):
         return reverse_lazy('show issues')

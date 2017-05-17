@@ -28,11 +28,10 @@ function claim(e) {
       'url': url
     },
     success: function(data) {
-      console.log(data);
+      $('#content').html(data['count'] + "번째 버스터 콜을 날렸습니다.");
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
-      // alert(errorThrown);
-      callback();
+      $('#content').html(errorThrown);
     }
   });
 }

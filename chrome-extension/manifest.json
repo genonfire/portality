@@ -6,7 +6,7 @@
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html",
-    "default_title": "현재 보고 있는 기사 찍기"
+    "default_title": "버스터 콜"
   },
   "icons": {
     "128": "icon.png",
@@ -31,10 +31,10 @@
   //   "page": "options.html",
   //   "chrome_style": false
   // },
-  "content_security_policy": "script-src 'self'; object-src 'self';",
+  // "content_security_policy": "script-src 'self'; object-src 'self';",
   "manifest_version": 2,
-  "name": "좌표 찍기",
-  "description": "기레기 감시하기 위해 기사의 좌표를 찍습니다.",
+  "name": "버스터 콜",
+  "description": "현재 보고 있는 기사에 버스터 콜을 날립니다.",
   // "web_accessible_resources": ["jquery-3.1.1.min.js"],
-  "version": "0.1"
+  "version": "0.5"
 }

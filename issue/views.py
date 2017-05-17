@@ -86,12 +86,22 @@ def edit_issue(request, id):
 
 @csrf_exempt
 def api_issue(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        issues = Issue.objects.all()
+        serializer = IssueSerializer(issues, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    elif request.method == 'POST':
         articleCheck = Issue.objects.filter(url=request.POST['url'])
         print articleCheck.count()
-        serializer = IssueSerializer(data=request.POST, partial=True)
-        if serializer.is_valid():
-            print "valid"
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
+        if articleCheck.count() == 1:
+            serializer = IssueSerializer(data=request.POST)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=201)
+        elif articleCheck.count() == 0:
+            serializer = IssueSerializer(data=request.POST)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
