@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>찍기</title>
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 9pt;
+        background-color:#F8F8F8;
+      }
+      div.status {
+        width: 280px;
+        height: auto;
+        margin-top:2px;
+      }
+      input.email {
+        width: 190px;
+        height: 15px;
+        background-color:white;
+        border:1 solid green;
+        font-size:10pt;
+        padding: 2px;
+        margin-bottom: 4px;
+      }
+      input.subject {
+        width: 260px;
+        height: 15px;
+        background-color:white;
+        border:1 solid green;
+        font-size:10pt;
+        padding: 2px;
+        margin-bottom: 4px;
+      }
+      input.url {
+        width: 260px;
+        height: 15px;
+        background-color:white;
+        border:1 solid green;
+        font-size:10pt;
+        padding: 2px;
+        margin-bottom: 4px;
+      }
+      input.claim {
+        width: 48px;
+        height: 28px;
+        background-color: #48E;
+        border:1 solid #37d;
+        font-size:10pt;
+        color:white;
+        vertical-align: bottom;
+      }
+
+      a:link {color:black; text-decoration:none; color: #37d;}
+      a:visited {color:black; text-decoration:none; color: #48E;}
+      a:hover {color:black; text-decoration:none; color: #48E;}
+
+    </style>
+
+    <script src="./popup.js"></script>
+    <script src="./jquery-3.1.1.min.js"></script>
+
+  </head>
+  <body>
+    <div id="status" class="status">
+      <form name="claimform">
+      기자 이메일: <input type="text" id="email" class="email" maxlength="50"><br>
+      기사 제목: <input type="text" id="subject" class="subject" maxlength="100"><br>
+      기사 주소: <input type="text" id="url" class="url" maxlength="255"><br>
+      <p align="right"><input type="button" id="claim" value="찍기" class="claim"></p>
+      </form>
+      <div id="content"></div>
+      <hr>
+
+      <div align="right">
+      <a href="http://localhost:8000/issue/" target="_blank">기레기 감시 시스템으로 이동</a>
+      </div>
+    </div>
+  </body>
+</html>

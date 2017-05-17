@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'giza',
     'issue',
+    'rest_framework'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -100,6 +101,14 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -130,4 +139,4 @@ LOGIN_REDIRECT_URL = 'login'
 
 # Setting for issue
 FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)
-HOTISSUE_LIMIT = 20 # 핫이슈 리스트 개수
+HOTISSUE_LIMIT = 100 # 핫이슈 리스트 개수

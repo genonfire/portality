@@ -3,6 +3,8 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 
+from rest_framework import serializers
+
 class Issue(models.Model):
     email = models.CharField(max_length="50")
     subject = models.CharField(max_length="100")

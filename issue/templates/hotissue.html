@@ -57,7 +57,7 @@ a:hover {color:yellow; text-decoration:none;}
     <table class="issue">
     <tr>
         <td rowspan="2" class="issueRank">{{forloop.counter}}</td>
-        <td class="issueSubject"><a href={{issue.url}}>{{issue.subject}}</a></td>
+        <td class="issueSubject"><a href={{issue.url}} target="_blank">{{issue.subject}}</a></td>
         {% if user.is_authenticated %}
         <td rowspan="2" width="32px"><a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit24.png' %}" title="편집"></a></td>
         {% endif %}

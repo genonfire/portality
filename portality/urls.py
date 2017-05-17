@@ -16,6 +16,7 @@ from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from issue import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -25,4 +26,5 @@ urlpatterns = [
     url(r'^gizadb/$', 'giza.views.show_giza', name="show giza"),
     url(r'^gizadb/new/$', 'giza.views.new_giza', name="new giza"),
     url(r'^gizadb/(?P<id>\d+)/edit/$', 'giza.views.edit_giza', name="edit giza"),
+    url(r'^api/issue/$', 'issue.views.api_issue', name="api issue"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
