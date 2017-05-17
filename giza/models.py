@@ -9,7 +9,7 @@ class Giza(models.Model):
     email = models.CharField(max_length="50")
     twitter = models.CharField(max_length="50", blank=True)
     facebook = models.CharField(max_length="50", blank=True)
-    belongto = models.CharField(max_length="20", blank=True)
+    belongto = models.CharField(max_length="20", choices=settings.MEDIA_CHOICE, default='4')
     portrait = models.ImageField(upload_to="portrait/", blank=True)
     profile = models.TextField(blank=True)
 

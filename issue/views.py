@@ -40,18 +40,15 @@ def new_issue(request):
             article = editform.save(commit=False)
             try:
                 articleCheck = Issue.objects.filter(url=article.url).get()
-                # existArticle = get_object_or_404(Issue, pk = articleCheck.id)
                 updateForm = IssueEditForm(request.POST, request.FILES, instance=articleCheck)
                 if updateForm.is_valid():
                     updateArticle = updateForm.save(commit=False)
                     updateArticle.count = updateArticle.count + 1
                     updateArticle.save()
-
                     return redirect(articleCheck.get_absolute_url())
             except ObjectDoesNotExist:
                 article.count = 1
                 article.save()
-
                 return redirect(article.get_absolute_url())
     elif request.method == "GET":
         editform = IssueEditForm()

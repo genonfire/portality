@@ -12,7 +12,15 @@
     {{ form.errors }}
     {{ form.non_field_errors }}
 
-    {{form.as_p}}
+    <div class="input_required">
+    <p>기자 이메일: {{form.email}}</p>
+    <p>기사 제목: {{form.subject}}</p>
+    <p>기사 주소: {{form.url}}</p>
+    </div>
+    <br>
+    <div class="input_optional">
+    <p>아카이브 주소: {{form.archive}}</p>
+    </div>
     <p><input type = "submit"></p>
 </form>
 {% endblock %}

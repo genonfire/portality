@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}핫 이슈{% endblock %}
+{% block title %}버스터 콜{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,8 +46,8 @@ a:hover {color:yellow; text-decoration:none;}
 
 <table class="headMenu">
 <tr>
-    <td class="menuHotIssue"><a href="{% url 'show issues' %}">핫 이슈</a></td>
-    <td class="menuRanking">기레기 랭킹</td>
+    <td class="menuHotIssue"><a href="{% url 'show issues' %}">버스터 콜</a></td>
+    <td class="menuRanking">랭킹</td>
     <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 DB</a></td>
     <td class="headMenu"><a href="{% url 'new issue' %}"><img src="{% static 'icons/add24.png' %}" title="이슈 생성"></a></td>
 </tr>

@@ -18,7 +18,7 @@ function claim(e) {
   }
 
   $.ajax({
-    url: 'http://localhost:8000/api/issue/',
+    url: 'http://localhost:8000/api/call/',
     method: 'POST',
     crossDomain: false,
     dataType: 'json',

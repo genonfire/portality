@@ -20,11 +20,11 @@ from issue import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^issue/$', 'issue.views.show_issues', name="show issues"),
+    url(r'^$', 'issue.views.show_issues', name="show issues"),
     url(r'^issue/new/$', 'issue.views.new_issue', name="new issue"),
     url(r'^issue/(?P<id>\d+)/edit/$', 'issue.views.edit_issue', name="edit issue"),
-    url(r'^gizadb/$', 'giza.views.show_giza', name="show giza"),
-    url(r'^gizadb/new/$', 'giza.views.new_giza', name="new giza"),
-    url(r'^gizadb/(?P<id>\d+)/edit/$', 'giza.views.edit_giza', name="edit giza"),
-    url(r'^api/issue/$', 'issue.views.api_issue', name="api issue"),
+    url(r'^db/$', 'giza.views.show_giza', name="show giza"),
+    url(r'^db/new/$', 'giza.views.new_giza', name="new giza"),
+    url(r'^db/(?P<id>\d+)/edit/$', 'giza.views.edit_giza', name="edit giza"),
+    url(r'^api/call/$', 'issue.views.api_issue', name="api issue"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
