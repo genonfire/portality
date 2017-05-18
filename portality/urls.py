@@ -20,6 +20,9 @@ from issue import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/login/', 'django.contrib.auth.views.login', name='login', kwargs={'template_name': 'login.html'}),
+    url(r'^accounts/logout/', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': 'login'}),
+    url(r'^accounts/passwordchange/', 'django.contrib.auth.views.password_change', {'post_change_redirect': 'login'}, name='passwordchange'),
     url(r'^$', 'issue.views.show_issues', name="show issues"),
     url(r'^issue/new/$', 'issue.views.new_issue', name="new issue"),
     url(r'^issue/(?P<id>\d+)/edit/$', 'issue.views.edit_issue', name="edit issue"),
