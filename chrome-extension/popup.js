@@ -2,15 +2,11 @@ function claim(e) {
   var email = document.getElementById("email").value;
   var subject = document.getElementById("subject").value;
   var url = document.getElementById("url").value;
-  email = "honeybee@yna.co.kr"
-  // subject = "[이슈플러스] 재벌 '저격수'에서 '저승사자'로 돌아온 김상조"
 
-  if (!email || !subject || !url) {
+  if (!subject || !url) {
     var empty = "";
-    if (!email)
-      empty += "이메일";
     if (!subject)
-      empty += ", 기사 제목";
+      empty += "기사 제목";
     if (!url)
       empty += ", 기사 주소";
     alert("다음 항목이 비어 있습니다. [" + empty + "]");

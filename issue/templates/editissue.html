@@ -1,8 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}Edit issue{% endblock %}
+{% block title %}이슈 편집{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+div.input_required {
+    padding: 4px; padding-left: 10px;
+    border: 1px solid #8298a6;
+    background-color: #8298a6;
+    font-weight: bold;
+}
+</style>
 {% endblock %}
 {% block content %}
 <form
@@ -13,13 +21,14 @@
     {{ form.non_field_errors }}
 
     <div class="input_required">
-    <p>기자 이메일: {{form.email}}</p>
     <p>기사 제목: {{form.subject}}</p>
     <p>기사 주소: {{form.url}}</p>
     </div>
     <br>
     <div class="input_optional">
-    <p>아카이브 주소: {{form.archive}}</p>
+    <p>기자 이메일: {{form.email}}</p>
+    <p>아카이브 주소: {{form.archive}}<br>
+     - archive.is 의 스냅샷 주소</p>
     </div>
     <p><input type = "submit"></p>
 </form>

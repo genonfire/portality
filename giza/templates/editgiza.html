@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}Edit giza{% endblock %}
+{% block title %}기자 편집{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+div.input_required {
+    padding: 4px; padding-left: 10px;
+    border: 1px solid #957248;
+    background-color: #957248;
+    font-weight: bold;
+}
+.errorlist {
+    color: red;
+}
+</style>
 {% endblock %}
 {% block content %}
 <form
@@ -12,7 +23,22 @@
     {{ form.errors }}
     {{ form.non_field_errors }}
 
-    {{form.as_p}}
+    <div class="input_required">
+    <p>이름: {{form.name}}</p>
+    <p>이메일: {{form.email}}</p>
+    <p>소속: {{form.belongto}}</p>
+    </div>
+    <br>
+    <div class="input_optional">
+    <p>트위터: {{form.twitter}}</p>
+    <p>페이스북: {{form.facebook}}</p>
+    <p>사진(120x160): {{form.portrait}}</p>
+    <p>약력: {{form.profile}}</p>
+    </div>
+    {% if edituser %}
+    <p>마지막으로 수정한 사람: {{edituser}}</p>
+    {% endif %}
+
     <p><input type = "submit"></p>
 </form>
 {% endblock %}

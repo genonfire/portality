@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}전체 기자 목록{% endblock %}
+{% block extra_head_content %}
+{{ block.super }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+td.gizaPortrait {
+    width: 140px;
+}
+td.gizaName {
+    height: 30px;
+}
+td.gizaBelong {
+    height: 32px;
+}
+td.gizaProfile {
+    padding: 2px; padding-top: 10px;
+    vertical-align: top;
+    color: #D8D8D8;
+}
+
+a:link {color:white; text-decoration:none;}
+a:visited {color:white; text-decoration:none;}
+a:hover {color:yellow; text-decoration:none;}
+</style>
+{% endblock %}
+{% block content %}
+
+<table class="headMenu">
+<tr>
+    <td class="menuHotIssue"><a href="{% url 'show issues' %}">버스터 콜</a></td>
+    <td class="menuRanking">랭킹</td>
+    <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 DB</a></td>
+    <td class="headMenu"><a href="{% url 'new giza' %}"><img src="{% static 'icons/add24.png' %}" title="기자 추가"></a></td>
+</tr>
+</table>
+<div class="gizadb">
+{% for giza in db %}
+    <table class="gizadb">
+    <tr>
+        <td rowspan="3" class="gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="120" height="160">{% endif %}</td>
+        <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}})</td>
+    </tr>
+    <tr>
+        <td class="gizaBelong">{{giza.belongto}}
+        {% if giza.twitter %}
+        <a href="{{giza.twitter}}" target="_blank"><img src="{% static 'icons/twitter24.png' %}"></a>
+        {% endif %}
+        {% if giza.facebook %}
+        <a href="{{giza.facebook}}"  target="_blank"><img src="{% static 'icons/facebook24.png' %}"></a>
+        {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td class="gizaProfile">{{giza.profile|linebreaksbr}}</td>
+    </tr>
+    </table>
+    {% if not forloop.last %}
+        <hr>
+    {% endif %}
+{% endfor %}
+</div>
+
+{% endblock %}

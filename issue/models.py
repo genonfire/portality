@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse_lazy
 from rest_framework import serializers
 
 class Issue(models.Model):
-    email = models.CharField(max_length="50")
+    email = models.CharField(max_length="50", blank=True)
     subject = models.CharField(max_length="100")
     url = models.CharField(max_length="255")
     archive = models.CharField(max_length="255", blank=True)

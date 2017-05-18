@@ -14,16 +14,23 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-def show_giza(request):
-    db = Giza.objects.all()
+def show_all_giza(request):
+    db = Giza.objects.order_by('belongto').all()
 
+    return render(
+        request,
+        "showallgiza.html",
+        {
+            'db': db,
+        }
+    )
+
+def show_giza(request):
     return render(
         request,
         "showgiza.html",
         {
-            'db' : db,
-        }
-    )
+        })
 
 @login_required
 def new_giza(request):
@@ -42,7 +49,7 @@ def new_giza(request):
         "editgiza.html",
         {
             'form': editform,
-            'editType': 'new',
+            'edituser': ''
         }
     )
 
@@ -65,6 +72,6 @@ def edit_giza(request, id):
         "editgiza.html",
         {
             'form': editform,
-            'editType': 'edit',
+            'edituser': giza.user,
         }
     )

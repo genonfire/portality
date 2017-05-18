@@ -21,8 +21,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 def show_issues(request):
-    startdate = datetime.date.today()
-    enddate = startdate + datetime.timedelta(days=settings.FILTER_DATE_DELTA)
+    startdate = timezone.now() - timezone.timedelta(days=settings.FILTER_DATE_DELTA)
+    enddate = timezone.now()
     issues = Issue.objects.filter(datetime__range=(startdate, enddate)).order_by('-count')[0:settings.HOTISSUE_LIMIT]
 
     return render(
