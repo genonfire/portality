@@ -19,9 +19,10 @@ def show_all_giza(request):
 
     return render(
         request,
-        "showallgiza.html",
+        "showgiza.html",
         {
             'db': db,
+            'count': db.count(),
         }
     )
 
@@ -35,19 +36,22 @@ def show_giza(request):
 
 def search_giza(request, searchType, searchWord):
     if searchType == "name":
-        db = Giza.objects.filter(name__icontains=searchWord)
+        db = Giza.objects.filter(name__icontains=searchWord).order_by('belongto')
     elif searchType == "email":
-        db = Giza.objects.filter(email__icontains=searchWord)
+        db = Giza.objects.filter(email__icontains=searchWord).order_by('belongto')
     elif searchType == "belongto":
-        db = Giza.objects.filter(belongto__icontains=searchWord)
+        db = Giza.objects.filter(belongto__icontains=searchWord).order_by('belongto')
     elif searchType == "twitter":
-        db = Giza.objects.filter(twitter__icontains=searchWord)
+        db = Giza.objects.filter(twitter__icontains=searchWord).order_by('belongto')
     elif searchType == "facebook":
-        db = Giza.objects.filter(facebook__icontains=searchWord)
+        db = Giza.objects.filter(facebook__icontains=searchWord).order_by('belongto')
     else:
         return render(
             request,
             "showgiza.html",
+            {
+                'count': 0,
+            }
         )
 
     return render(
