@@ -30,7 +30,34 @@ def show_giza(request):
         request,
         "showgiza.html",
         {
+            'count': 0,
         })
+
+def search_giza(request, searchType, searchWord):
+    if searchType == "name":
+        db = Giza.objects.filter(name__icontains=searchWord)
+    elif searchType == "email":
+        db = Giza.objects.filter(email__icontains=searchWord)
+    elif searchType == "belongto":
+        db = Giza.objects.filter(belongto__icontains=searchWord)
+    elif searchType == "twitter":
+        db = Giza.objects.filter(twitter__icontains=searchWord)
+    elif searchType == "facebook":
+        db = Giza.objects.filter(facebook__icontains=searchWord)
+    else:
+        return render(
+            request,
+            "showgiza.html",
+        )
+
+    return render(
+        request,
+        "showgiza.html",
+        {
+            'db': db,
+            'count': db.count(),
+        }
+    )
 
 @login_required
 def new_giza(request):

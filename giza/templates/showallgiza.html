@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}전체 기자 목록{% endblock %}
+{% block title %}전체 기자 지구{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +31,7 @@ a:hover {color:yellow; text-decoration:none;}
 <tr>
     <td class="menuHotIssue"><a href="{% url 'show issues' %}">버스터 콜</a></td>
     <td class="menuRanking">랭킹</td>
-    <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 DB</a></td>
+    <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
     <td class="headMenu"><a href="{% url 'new giza' %}"><img src="{% static 'icons/add24.png' %}" title="기자 추가"></a></td>
 </tr>
 </table>

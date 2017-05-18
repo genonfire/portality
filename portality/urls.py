@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^db/$', 'giza.views.show_giza', name="show giza"),
     url(r'^db/new/$', 'giza.views.new_giza', name="new giza"),
     url(r'^db/(?P<id>\d+)/edit/$', 'giza.views.edit_giza', name="edit giza"),
-    url(r'^api/call/$', 'issue.views.api_issue', name="api issue"),
+    url(r'^db/search/(?P<searchType>.*)/(?P<searchWord>.*)/$', 'giza.views.search_giza', name="search giza"),
+    url(r'^api/call/$', views.api_issue),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
