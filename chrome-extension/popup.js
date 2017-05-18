@@ -14,7 +14,7 @@ function claim(e) {
   }
 
   $.ajax({
-    url: 'http://localhost:8000/api/call/',
+    url: 'http://portal.gencode.me/api/call/',
     method: 'POST',
     crossDomain: false,
     dataType: 'json',

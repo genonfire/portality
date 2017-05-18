@@ -10,12 +10,21 @@ class IssueSerializer(serializers.Serializer):
     count = serializers.IntegerField(default=1)
 
     def create(self, validated_data):
-        issue, created = Issue.objects.get_or_create(
-        url=validated_data.get('url', None),
-        defaults={'url': validated_data.get('url', None),
-            'subject': validated_data.get('subject', None),
-            'count': 1
-        })
+        if validated_data.get('email'):
+            issue, created = Issue.objects.get_or_create(
+            url=validated_data.get('url', None),
+            defaults={'url': validated_data.get('url', None),
+                'subject': validated_data.get('subject', None),
+                'email': validated_data.get('email', None),
+                'count': 1
+            })
+        else:
+            issue, created = Issue.objects.get_or_create(
+            url=validated_data.get('url', None),
+            defaults={'url': validated_data.get('url', None),
+                'subject': validated_data.get('subject', None),
+                'count': 1
+            })
         if not created:
             issue.count = issue.count + 1
             issue.save()
