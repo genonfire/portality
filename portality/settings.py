@@ -21,14 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-try:
-    with open(os.path.join(BASE_DIR, "secrets.json")) as f:
-        data = json.loads(f.read())
-    SecretsNamedTuple = namedtuple('SecretsNamedTuple', data.keys(), verbose=False)
-    secrets = SecretsNamedTuple(*[data[x] for x in data.keys()])
-    SECRET_KEY = getattr(secrets, "SECRET_KEY")
-except IOError:
-    SECRET_KEY = 'k8n13h0y@$=v$uxg*^brlv9$#hm8w7nye6km!shc*&bkgkcd*p' # test key
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -92,6 +85,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'portality.wsgi.application'
 
+try:
+    with open(os.path.join(BASE_DIR, "secrets.json")) as f:
+        data = json.loads(f.read())
+    SecretsNamedTuple = namedtuple('SecretsNamedTuple', data.keys(), verbose=False)
+    secrets = SecretsNamedTuple(*[data[x] for x in data.keys()])
+    SECRET_KEY = getattr(secrets, "SECRET_KEY")
+    DB_NAME = getattr(secrets, "DB_NAME")
+    DB_USER = getattr(secrets, "DB_USER")
+    DB_PASSWORD = getattr(secrets, "DB_PASSWORD")
+except IOError:
+    SECRET_KEY = 'k8n13h0y@$=v$uxg*^brlv9$#hm8w7nye6km!shc*&bkgkcd*p' # test key
+    DB_NAME = "genonfire"
+    DB_USER = "genonfire"
+    DB_PASSWORD = "1234"
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -99,9 +106,9 @@ WSGI_APPLICATION = 'portality.wsgi.application'
 DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'genonfire',
-         'USER': 'genonfire',
-         'PASSWORD': '1234',
+         'NAME': DB_NAME,
+         'USER': DB_USER,
+         'PASSWORD': DB_PASSWORD,
          'HOST': 'localhost',
          'PORT': '',
     }
