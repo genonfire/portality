@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     'giza',
     'issue',
     'rest_framework',
-#     'verified_email_field',
 #    'allauth',
 #    'allauth.account',
 #    'allauth.socialaccount',
