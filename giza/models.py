@@ -19,6 +19,5 @@ class Giza(models.Model):
     portrait = models.ImageField(upload_to="portrait/", blank=True, validators=[validate_image])
     profile = models.TextField(blank=True)
 
-
     def get_absolute_url(self):
         return reverse_lazy('show all giza')

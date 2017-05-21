@@ -1,15 +1,22 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+#-*- coding: utf-8 -*-
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-
-from models import Giza
-from giza.forms import GizaEditForm
-
+from django.core.urlresolvers import reverse_lazy
+from django.core.mail import send_mail
+from smtplib import SMTPException
+from django.core.signing import Signer, TimestampSigner
+from django.core.context_processors import csrf
 from django.conf import settings
 
+from models import Giza
+from giza.forms import GizaEditForm, RegistrationForm
+
+import json
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -106,3 +113,106 @@ def edit_giza(request, id):
             'edituser': giza.user,
         }
     )
+
+def check_validation(request):
+    username = request.POST.get('username')
+    idcheck = User.objects.filter(username__iexact=username).exists()
+
+    code = request.POST.get('code')
+    email = request.POST.get('email')
+    signer = TimestampSigner()
+    msg = ''
+    result = False
+
+    try:
+        value = signer.unsign(code, max_age=180)
+        codeCheck = value == email
+
+        if idcheck:
+            msg = u"이미 존재하는 아이디입니다."
+        elif not codeCheck:
+            msg = u"인증코드가 잘못되었습니다."
+        else:
+            result = True
+    except:
+        msg = u"인증코드가 잘못되었습니다."
+
+    data = {
+        'result': result,
+        'msg': msg,
+    }
+
+    return JsonResponse(data)
+
+def sign_up(request):
+    if request.method == "POST":
+        userform = RegistrationForm(request.POST)
+        if userform.is_valid():
+            userform.save(commit=False)
+            email = userform.cleaned_data['email']
+            code = userform.cleaned_data['code']
+            signer = TimestampSigner()
+            try:
+                value = signer.unsign(code, max_age=180)
+                idCheck = value == email
+                if (idCheck):
+                    msg = u"가입성공.<br><a href=%s>로그인</a>" % reverse_lazy('login')
+                    userform.save()
+                else:
+                    msg = u"인증코드를 확인해 주세요."
+            except:
+                msg = u"인증코드를 확인해 주세요.."
+        else:
+            msg = u"회원가입 오류.<br>아이디를 확인해 주세요."
+        return HttpResponse(msg)
+    elif request.method == "GET":
+        userform = RegistrationForm()
+
+    return render(
+        request,
+        "signup.html",
+        {
+            'userform': userform,
+        }
+    )
+
+def check_duplication(request):
+    username = request.POST.get('username')
+    idcheck = User.objects.filter(username__iexact=username).exists()
+    if (idcheck):
+        msg = u"이미 존재하는 아이디입니다."
+    else:
+        msg = u"사용 가능한 아이디입니다."
+    data = {
+        'idcheck': idcheck,
+        'msg': msg,
+    }
+    return JsonResponse(data)
+
+def check_email(request):
+    id_email = request.POST.get('email')
+    signer = TimestampSigner()
+    value = signer.sign(id_email)
+    subject = u'[gencode.me] 회원가입 인증 메일입니다.'
+    body = u'인증코드(이메일주소 포함): %s' % value
+
+    try:
+        send_mail(subject, body, settings.EMAIL_HOST_USER, [id_email], fail_silently=False)
+        return HttpResponse(status=201)
+    except SMTPException:
+        return HttpResponse(status=400)
+
+@login_required
+def send_email(request):
+    id_email = request.user.email
+    print "sending email to", id_email
+    signer = TimestampSigner()
+    value = signer.sign(id_email)
+    subject = u'[gencode.me] 테스트 메일입니다.'
+    body = u'인증코드(이메일주소 포함): %s' % value
+
+    try:
+        send_mail(subject, body, settings.EMAIL_HOST_USER, [id_email], fail_silently=False)
+        return HttpResponse("email sent", status=201)
+    except SMTPException:
+        return HttpResponse(status=400)

@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'giza',
     'issue',
     'rest_framework',
+#     'verified_email_field',
 #    'allauth',
 #    'allauth.account',
 #    'allauth.socialaccount',
@@ -95,15 +96,27 @@ try:
     DB_NAME = getattr(secrets, "DB_NAME")
     DB_USER = getattr(secrets, "DB_USER")
     DB_PASSWORD = getattr(secrets, "DB_PASSWORD")
+    EMAIL_HOST = getattr(secrets, "EMAIL_HOST")
+    EMAIL_HOST_USER = getattr(secrets, "EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = getattr(secrets, "EMAIL_HOST_PASSWORD")
+    DEFAUL_FROM_EMAIL = getattr(secrets, "DEFAUL_FROM_EMAIL")
+    SERVER_EMAIL = getattr(secrets, "SERVER_EMAIL")
 except IOError:
     SECRET_KEY = 'k8n13h0y@$=v$uxg*^brlv9$#hm8w7nye6km!shc*&bkgkcd*p' # test key
-    DB_NAME = "genonfire"
-    DB_USER = "genonfire"
-    DB_PASSWORD = "1234"
+    DB_NAME = ''
+    DB_USER = ''
+    DB_PASSWORD = ''
+    EMAIL_HOST_USER = ''
+    EMAIL_HOST_PASSWORD = ''
+    DEFAUL_FROM_EMAIL = ''
+    SERVER_EMAIL = ''
+
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
 DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
