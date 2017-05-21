@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^$', 'issue.views.show_issues', name="show issues"),
     url(r'^issue/new/$', 'issue.views.new_issue', name="new issue"),
     url(r'^issue/(?P<id>\d+)/edit/$', 'issue.views.edit_issue', name="edit issue"),
+    url(r'^issue/search/(?P<searchType>.*)/(?P<searchWord>.*)/$', 'issue.views.search_issue', name="search issue"),
     url(r'^db/all/$', 'giza.views.show_all_giza', name="show all giza"),
     url(r'^db/$', 'giza.views.show_giza', name="show giza"),
     url(r'^db/new/$', 'giza.views.new_giza', name="new giza"),

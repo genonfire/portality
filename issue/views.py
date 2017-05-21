@@ -33,6 +33,24 @@ def show_issues(request):
         }
     )
 
+def search_issue(request, searchType, searchWord):
+    if searchType == "subject":
+        issues = Issue.objects.filter(subject__icontains=searchWord).order_by('-count', '-datetime')
+    elif searchType == "url":
+        issues = Issue.objects.filter(url__icontains=searchWord).order_by('-count', '-datetime')
+    elif searchType == "email":
+        issues = Issue.objects.filter(email__icontains=searchWord).order_by('-count', '-datetime')
+    else:
+        issues = None
+
+    return render(
+        request,
+        "hotissue.html",
+        {
+            'issues' : issues,
+        }
+    )
+
 def new_issue(request):
     if request.method == "POST":
         editform = IssueEditForm(request.POST, request.FILES)
@@ -78,6 +96,7 @@ def edit_issue(request, id):
         'editissue.html',
         {
             'form': editform,
+            'created_at': issue.datetime,
         }
     )
 

@@ -29,6 +29,9 @@ div.input_required {
     <p>기자 이메일: {{form.email}}</p>
     <p>아카이브 주소: {{form.archive}}<br>
      - archive.is 의 스냅샷 주소</p>
+    {% if created_at %}
+    <p><font size="2">입력: {{created_at|date:"Y-m-d H:i:s"}}</font></p>
+    {% endif %}
     </div>
     <p><input type="reset" style="border-color:blue"> <input type = "submit"></p>
 </form>
