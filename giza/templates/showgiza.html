@@ -20,32 +20,11 @@ td.gizaProfile {
     color: #D8D8D8;
 }
 
-div.gizaSearch {
-    padding: 2px;
-}
+
 span.gizashowall {
     background-color: #957248;
     font-size: 80%;
 }
-
-input.searchWord {
-    width: 200px;
-    height: 18px;
-    background-color:white;
-    border:1 solid green;
-    font-size:10pt;
-    padding: 2px;
-    vertical-align: bottom;
-  }
-input.searchButton {
-    width: 48px;
-    height: 28px;
-    background-color: #48E;
-    border:1 solid #37d;
-    font-size:10pt;
-    color:white;
-    vertical-align: bottom;
-  }
 
 a:link {color:white; text-decoration:none;}
 a:visited {color:white; text-decoration:none;}
@@ -89,16 +68,16 @@ function onKeyPress(e) {
     </td>
 </tr>
 </table>
-<div class="gizaSearch">
-    <p><select id="searchType">
+<div class="dbSearch">
+    <select id="searchType">
+        <option value="belongto">언론사</option>
         <option value="name">이름</option>
-        <option value="belongto">소속</option>
         <option value="email">이메일</option>
         <option value="twitter">트위터</option>
         <option value="facebook">페이스북</option>
     </select> 
     <input type="text" id="searchWord" class="searchWord" maxlength="100" onkeypress="onKeyPress(event)"> 
-    <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search()"> <span class="gizashowall"><a href="{% url 'show all giza' %}">모두 보기</a></div></p>
+    <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search()"> <span class="gizashowall"><a href="{% url 'show all giza' %}">모두 보기</a></div>
 </div>
 
 {% if count %}
@@ -107,10 +86,10 @@ function onKeyPress(e) {
     <table class="gizadb">
     <tr>
         <td rowspan="3" class="gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="120" height="160">{% endif %}</td>
-        <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}}) <font size="2"><a href="{% url 'search issue' searchType='email' searchWord=giza.email %}">기사검색</a></font></td>
+        <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}}) <font size="2">[ <a href="{% url 'search issue' searchType='email' searchWord=giza.email %}">기자로 검색</a> | <a href="{% url 'search issue' searchType='belongto' searchWord=giza.belongto %}">언론사로 검색</a> ]</font></td>
     </tr>
     <tr>
-        <td class="gizaBelong">{{giza.belongto}}
+        <td class="gizaBelong"><a href="{% url 'search giza' searchType='belongto' searchWord=giza.belongto %}">{{giza.belongto}}</a>
         {% if giza.twitter %}
         <a href="{{giza.twitter}}" target="_blank"><img src="{% static 'icons/twitter24.png' %}"></a>
         {% endif %}

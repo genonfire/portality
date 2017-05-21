@@ -43,7 +43,7 @@ def show_giza(request):
 
 def search_giza(request, searchType, searchWord):
     if searchType == "name":
-        db = Giza.objects.filter(name__icontains=searchWord).order_by('belongto')
+        db = Giza.objects.filter(name__iexact=searchWord).order_by('belongto')
     elif searchType == "email":
         db = Giza.objects.filter(email__icontains=searchWord).order_by('belongto')
     elif searchType == "belongto":

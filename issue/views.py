@@ -34,14 +34,23 @@ def show_issues(request):
     )
 
 def search_issue(request, searchType, searchWord):
+    issues = None
     if searchType == "subject":
         issues = Issue.objects.filter(subject__icontains=searchWord).order_by('-count', '-datetime')
     elif searchType == "url":
-        issues = Issue.objects.filter(url__icontains=searchWord).order_by('-count', '-datetime')
+        issues = Issue.objects.filter(url__iexact=searchWord).order_by('-count', '-datetime')
     elif searchType == "email":
         issues = Issue.objects.filter(email__icontains=searchWord).order_by('-count', '-datetime')
-    else:
-        issues = None
+    elif searchType == "name":
+        giza = Giza.objects.filter(name__iexact=searchWord)
+        if giza.exists():
+            emails = giza.values_list('email', flat=True)
+            issues = Issue.objects.filter(email__in=emails)
+    elif searchType == "belongto":
+        giza = Giza.objects.filter(belongto__icontains=searchWord)
+        if giza.exists():
+            emails = giza.values_list('email', flat=True)
+            issues = Issue.objects.filter(email__in=emails)
 
     return render(
         request,

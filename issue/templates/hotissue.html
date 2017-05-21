@@ -21,6 +21,28 @@ a:link {color:white; text-decoration:none;}
 a:visited {color:white; text-decoration:none;}
 a:hover {color:yellow; text-decoration:none;}
 </style>
+<script>
+function search() {
+    var type = document.getElementById('searchType').value;
+    var word = document.getElementById('searchWord').value;
+    if (!word) {
+        alert("검색어를 입력하세요.");
+        return;
+    }
+    var url = "{% url 'search issue' searchType='type' searchWord='word' %}".replace(/type/, type).replace(/word/, word).replace(/http:\/\//, '').replace(/https:\/\//, '').replace(/twitter.com\//, '').replace(/facebook.com\//, '');
+    if (url.substr(-1) == '/') {
+        url = url.slice(0, -1);
+    }
+    location.href = url;
+}
+
+function onKeyPress(e) {
+    if (e.keyCode == 13) {
+        e.preventDefault();
+        search();
+    }
+}
+</script>
 {% endblock %}
 {% block content %}
 
@@ -38,6 +60,17 @@ a:hover {color:yellow; text-decoration:none;}
     </td>
 </tr>
 </table>
+<div class="dbSearch">
+    <select id="searchType">
+        <option value="belongto">언론사</option>
+        <option value="name">기자 이름</option>
+        <option value="email">기자 이메일</option>
+        <option value="subject">기사 제목</option>
+        <option value="url">기자 URL</option>
+    </select>
+    <input type="text" id="searchWord" class="searchWord" maxlength="254" onkeypress="onKeyPress(event)"> <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search()">
+</div>
+
 <div class="issue">
 {% for issue in issues %}
     <table class="issue">
