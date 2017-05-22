@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
 
 def validate_image(attached):
     size = attached.file.size
@@ -21,3 +22,11 @@ class Giza(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy('show all giza')
+
+    def save(self, *args, **kwargs):
+        try:
+            this = Giza.objects.get(id=self.id)
+            if this.portrait != self.portrait:
+                this.portrait.delete()
+        except: pass
+        super(Giza, self).save(*args, **kwargs)
