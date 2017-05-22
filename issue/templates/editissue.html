@@ -43,7 +43,6 @@ $('#issue_edit_form').submit(function(e) {
     id_archive = $('#id_archive').val();
     if (id_archive) {
         url = "http://" + id_archive.replace(/http:\/\//, '').replace(/https:\/\//, '');
-        alert(url);
         $('#id_archive').val(url);
     }
 });
