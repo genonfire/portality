@@ -75,7 +75,7 @@ function onKeyPress(e) {
     <table class="issue">
     <tr>
         <td rowspan="2" class="issueRank">{{forloop.counter}}</td>
-        <td class="issueSubject"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
+        <td class="issueSubject"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}" target="_blank"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
         {% if user.is_authenticated %}
         <td rowspan="2" width="32px"><a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit24.png' %}" title="편집"></a></td>
         {% endif %}

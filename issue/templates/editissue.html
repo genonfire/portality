@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}이슈 편집{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
@@ -11,9 +12,11 @@ div.input_required {
     font-weight: bold;
 }
 </style>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}" /></script>
 {% endblock %}
 {% block content %}
 <form
+    id="issue_edit_form"
     method="POST"
     enctype="multipart/form-data">
     {% csrf_token %}
@@ -33,6 +36,16 @@ div.input_required {
     <p><font size="2">입력: {{created_at|date:"Y-m-d H:i:s"}}</font></p>
     {% endif %}
     </div>
-    <p><input type="reset" style="border-color:blue"> <input type = "submit"></p>
+    <p><input type="reset" style="border-color:blue"> <input type="submit"></p>
 </form>
+<script>
+$('#issue_edit_form').submit(function(e) {
+    id_archive = $('#id_archive').val();
+    if (id_archive) {
+        url = "http://" + id_archive.replace(/http:\/\//, '').replace(/https:\/\//, '');
+        alert(url);
+        $('#id_archive').val(url);
+    }
+});
+</script>
 {% endblock %}
