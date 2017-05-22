@@ -7,6 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from django.db.models import Sum
 import datetime
 
 from models import Issue
@@ -128,3 +129,30 @@ def api_issue(request):
                 serializer.save()
                 return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
+def getKey(item):
+    return item[1]
+
+def ranking(request):
+    startdate = timezone.now() - timezone.timedelta(days=settings.RANKING_DATE_DELTA)
+    enddate = timezone.now()
+    issues = Issue.objects.exclude(email__iexact='').filter(datetime__range=(startdate, enddate)).order_by('email', '-count').select_related('email', 'count')
+    emails = issues.distinct('email').values_list('email', flat=True)
+
+    countList = []
+
+    for email in emails:
+        count = issues.filter(email__iexact=email).aggregate(total_count=Sum('count'))
+        giza = Giza.objects.filter(email__iexact=email)
+        if giza.exists():
+            countList.append((giza[0], count['total_count']))
+
+    listRank = sorted(countList, key=getKey, reverse=True)
+
+    return render(
+        request,
+        "ranking.html",
+        {
+            'lists': listRank,
+        }
+    )

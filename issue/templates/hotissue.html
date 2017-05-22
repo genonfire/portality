@@ -45,11 +45,10 @@ function onKeyPress(e) {
 </script>
 {% endblock %}
 {% block content %}
-
 <table class="headMenu">
 <tr>
     <td class="menuHotIssue"><a href="{% url 'show issues' %}">버스터 콜</a></td>
-    <td class="menuRanking">랭킹</td>
+    <td class="menuRanking"><a href="{% url 'ranking' %}">랭킹</a></td>
     <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
     <td class="headMenu">
     {% if user.is_authenticated %}

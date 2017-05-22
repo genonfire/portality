@@ -168,6 +168,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
 
 LOGIN_REDIRECT_URL = 'login'
 
+
+# Setting for ranking
+RANKING_DATE_DELTA = 30 # 랭킹 계산에 포함될 시간(일)
+
 # Setting for issue
 FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)
 HOTISSUE_LIMIT = 20 # 핫이슈 리스트 개수

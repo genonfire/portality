@@ -77,6 +77,9 @@ def new_giza(request):
         if editform.is_valid():
             giza = editform.save(commit=False)
             giza.user = request.user
+            gizaCheck = Giza.objects.filter(email__iexact=giza.email)
+            if (gizaCheck):
+                return HttpResponse(u"이미 존재합니다.<br><a href='javascript:history.back()''>돌아가기</a>")
             giza.save()
             return redirect(giza.get_absolute_url())
     elif request.method == "GET":

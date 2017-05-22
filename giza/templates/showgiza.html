@@ -20,7 +20,6 @@ td.gizaProfile {
     color: #D8D8D8;
 }
 
-
 span.gizashowall {
     background-color: #957248;
     font-size: 80%;
@@ -57,7 +56,7 @@ function onKeyPress(e) {
 <table class="headMenu">
 <tr>
     <td class="menuHotIssue"><a href="{% url 'show issues' %}">버스터 콜</a></td>
-    <td class="menuRanking">랭킹</td>
+    <td class="menuRanking"><a href="{% url 'ranking' %}">랭킹</a></td>
     <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
     <td class="headMenu">
     {% if user.is_authenticated %}
@@ -85,7 +84,7 @@ function onKeyPress(e) {
 {% for giza in db %}
     <table class="gizadb">
     <tr>
-        <td rowspan="3" class="gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="120" height="160">{% endif %}</td>
+        <td rowspan="3" class="gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="120" height="160">{% else %}<img src="{% static 'images/nophoto.png' %}" width="120" height="160">{% endif %}</td>
         <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}}) <font size="2">[ <a href="{% url 'search issue' searchType='email' searchWord=giza.email %}">기자로 검색</a> | <a href="{% url 'search issue' searchType='belongto' searchWord=giza.belongto %}">언론사로 검색</a> ]</font></td>
     </tr>
     <tr>
