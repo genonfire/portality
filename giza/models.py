@@ -30,3 +30,7 @@ class Giza(models.Model):
                 this.portrait.delete()
         except: pass
         super(Giza, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.portrait.delete();
+        super(Giza, self).delete(*args, **kwargs)

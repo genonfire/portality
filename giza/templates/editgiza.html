@@ -41,4 +41,16 @@ div.input_required {
 
     <p><input type="reset" style="border-color:blue"> <input type = "submit"></p>
 </form>
+{% if user.is_superuser and edituser %}
+<script>
+function checkDelete(deleteText) {
+    if (deleteText == 'delete')
+        location.href = "{% url 'delete giza' id=id %}";
+}
+</script>
+<div class="delete">
+    삭제하려면 <font color="red"><b>delete</b></font> 입력 후 삭제 버튼을 누르세요.<br>
+    <input id="delbox" type="text" size="8"> <input type="button" value="삭제" style="border-color:red" onclick="checkDelete(document.getElementById('delbox').value)">
+</div>
+{% endif %}
 {% endblock %}

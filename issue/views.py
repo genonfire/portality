@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
@@ -107,8 +107,16 @@ def edit_issue(request, id):
         {
             'form': editform,
             'created_at': issue.datetime,
+            'id': id,
         }
     )
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_issue(request, id):
+    issue = get_object_or_404(Issue, pk = id)
+    issue.delete()
+
+    return redirect(issue.get_absolute_url())
 
 @csrf_exempt
 def api_issue(request):

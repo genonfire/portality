@@ -47,4 +47,16 @@ $('#issue_edit_form').submit(function(e) {
     }
 });
 </script>
+{% if user.is_superuser and created_at %}
+<script>
+function checkDelete(deleteText) {
+    if (deleteText == 'delete')
+        location.href = "{% url 'delete issue' id=id %}";
+}
+</script>
+<div class="delete">
+    삭제하려면 <font color="red"><b>delete</b></font> 입력 후 삭제 버튼을 누르세요.<br>
+    <input id="delbox" type="text" size="8"> <input type="button" value="삭제" style="border-color:red" onclick="checkDelete(document.getElementById('delbox').value)">
+</div>
+{% endif %}
 {% endblock %}

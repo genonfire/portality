@@ -2,7 +2,7 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
@@ -114,8 +114,16 @@ def edit_giza(request, id):
         {
             'form': editform,
             'edituser': giza.user,
+            'id': id,
         }
     )
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_giza(request, id):
+    giza = get_object_or_404(Giza, pk = id)
+    giza.delete()
+
+    return redirect(giza.get_absolute_url())
 
 def check_validation(request):
     username = request.POST.get('username')
@@ -205,7 +213,7 @@ def check_email(request):
     except SMTPException:
         return HttpResponse(status=400)
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def send_email(request):
     id_email = request.user.email
     print "sending email to", id_email
