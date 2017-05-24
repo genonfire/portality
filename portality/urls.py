@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^accounts/checkemail/', 'giza.views.check_email', name='check email'),
     url(r'^accounts/sendemail/', 'giza.views.send_email', name='send email'),
     url(r'^$', 'issue.views.show_issues', name="show issues"),
+    url(r'^issue/all/$', 'issue.views.show_all_issues', name="show all issues"),
     url(r'^ranking/$', 'issue.views.ranking', name="ranking"),
     url(r'^issue/new/$', 'issue.views.new_issue', name="new issue"),
     url(r'^issue/(?P<id>\d+)/edit/$', 'issue.views.edit_issue', name="edit issue"),

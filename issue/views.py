@@ -22,6 +22,18 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+@user_passes_test(lambda u: u.is_superuser)
+def show_all_issues(request):
+    issues = Issue.objects.all().order_by('-datetime')
+
+    return render(
+        request,
+        "hotissue.html",
+        {
+            'issues' : issues,
+        }
+    )
+
 def show_issues(request):
     startdate = timezone.now() - timezone.timedelta(days=settings.FILTER_DATE_DELTA)
     enddate = timezone.now()
