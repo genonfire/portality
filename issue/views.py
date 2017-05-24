@@ -147,7 +147,7 @@ def ranking(request):
         if giza.exists():
             countList.append((giza[0], count['total_count']))
 
-    listRank = sorted(countList, key=getKey, reverse=True)
+    listRank = sorted(countList, key=getKey, reverse=True)[0:settings.RANKING_LIST_LIMIT]
 
     return render(
         request,
