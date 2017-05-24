@@ -8,15 +8,18 @@ class IssueSerializer(serializers.Serializer):
     archive = serializers.BooleanField(required=False)
     datetime = serializers.DateTimeField(required=False)
     count = serializers.IntegerField(default=1)
+    claimusers = serializers.CharField(required=False)
 
     def create(self, validated_data):
         new_email = validated_data.get('email')
+        claimusers = validated_data.get('claimusers')
         if new_email:
             issue, created = Issue.objects.get_or_create(
             url=validated_data.get('url', None),
             defaults={'url': validated_data.get('url', None),
                 'subject': validated_data.get('subject', None),
                 'email': validated_data.get('email', None),
+                'claimusers': validated_data.get('claimusers', None),
                 'count': 1
             })
         else:
@@ -24,12 +27,16 @@ class IssueSerializer(serializers.Serializer):
             url=validated_data.get('url', None),
             defaults={'url': validated_data.get('url', None),
                 'subject': validated_data.get('subject', None),
+                'claimusers': validated_data.get('claimusers', None),
                 'count': 1
             })
         if not created:
-            issue.count = issue.count + 1
+            existusers = issue.claimusers.split(',')
+            if claimusers not in existusers:
+                issue.claimusers += "," + claimusers
+                issue.count = issue.count + 1
             if new_email and not issue.email:
-                print "new email exist"
                 issue.email = new_email
             issue.save()
+
         return issue

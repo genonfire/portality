@@ -14,6 +14,7 @@ from models import Issue
 from giza.models import Giza
 from issue.forms import IssueEditForm
 from issue.serializers import IssueSerializer
+from portality.utils import *
 
 from django.conf import settings
 
@@ -71,11 +72,16 @@ def new_issue(request):
                 updateForm = IssueEditForm(request.POST, request.FILES, instance=articleCheck)
                 if updateForm.is_valid():
                     updateArticle = updateForm.save(commit=False)
-                    updateArticle.count = updateArticle.count + 1
+                    claimusers = updateArticle.claimusers.split(',')
+                    ip = get_ipaddress(request)
+                    if ip not in claimusers:
+                        updateArticle.claimusers += "," + ip
+                        updateArticle.count = updateArticle.count + 1
                     updateArticle.save()
                     return redirect(articleCheck.get_absolute_url())
             except ObjectDoesNotExist:
                 article.count = 1
+                article.claimusers = get_ipaddress(request)
                 article.save()
                 return redirect(article.get_absolute_url())
     elif request.method == "GET":
@@ -125,6 +131,8 @@ def api_issue(request):
         serializer = IssueSerializer(issues, many=True)
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'POST':
+        request.POST = request.POST.copy()
+        request.POST['claimusers'] = get_ipaddress(request)
         serializer = IssueSerializer(data=request.POST)
         if serializer.is_valid():
             serializer.save()

@@ -12,6 +12,7 @@ class Issue(models.Model):
     archive = models.CharField(max_length="255", blank=True)
     datetime = models.DateTimeField(auto_now_add=True)
     count = models.IntegerField(default=1)
+    claimusers = models.TextField(default='', blank=True)
 
     def get_absolute_url(self):
         return reverse_lazy('show issues')

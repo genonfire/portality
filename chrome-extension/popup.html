@@ -44,6 +44,15 @@
         border:1 solid green;
         font-size:10pt;
         padding: 2px;
+        margin-bottom: 10px;
+      }
+      input.archive {
+        width: 206px;
+        height: 15px;
+        background-color:white;
+        border:1 solid green;
+        font-size:10pt;
+        padding: 2px;
         margin-bottom: 4px;
       }
       input.claim {
@@ -59,19 +68,17 @@
       a:link {color:black; text-decoration:none; color: #37d;}
       a:visited {color:black; text-decoration:none; color: #48E;}
       a:hover {color:black; text-decoration:none; color: #48E;}
-
     </style>
-
     <script src="./popup.js"></script>
     <script src="./jquery-3.1.1.min.js"></script>
-
   </head>
   <body>
     <div id="status" class="status">
       <form name="claimform">
       기자 이메일: <input type="text" id="email" class="email" maxlength="50"><br>
-      기사 제목: <input type="text" id="subject" class="subject" maxlength="100"><br>
-      기사 주소: <input type="text" id="url" class="url" maxlength="255"><br>
+      <b>기사 제목:</b> <input type="text" id="subject" class="subject" maxlength="100"><br>
+      <b>기사 주소:</b> <input type="text" id="url" class="url" maxlength="255"><br>
+      <!--archive.is: <input type="text" id="archive" class="archive" maxlength="255"><br>-->
       <p align="right"><input type="button" id="claim" value="찍기" class="claim"></p>
       </form>
       <div id="content"></div>

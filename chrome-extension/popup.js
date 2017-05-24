@@ -21,7 +21,8 @@ function claim(e) {
     data: {
       'email': email,
       'subject': subject,
-      'url': url
+      'url': url,
+      'claimusers': ''
     },
     success: function(data) {
       $('#content').html(data['count'] + "번째 버스터 콜을 날렸습니다.");
