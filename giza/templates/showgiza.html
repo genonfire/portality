@@ -25,6 +25,12 @@ span.gizashowall {
     font-size: 80%;
 }
 
+div.annotation {
+    font-size: 80%;
+    color: #707070;
+    margin-bottom: 18px;
+}
+
 a:link {color:white; text-decoration:none;}
 a:visited {color:white; text-decoration:none;}
 a:hover {color:yellow; text-decoration:none;}
@@ -78,6 +84,9 @@ function onKeyPress(e) {
     <input type="text" id="searchWord" class="searchWord" maxlength="100" onkeypress="onKeyPress(event)"> 
     <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search()"> <span class="gizashowall"><a href="{% url 'show all giza' %}">모두 보기</a></div>
 </div>
+<div class="annotation">
+잘못된 정보 수정, 인물사진 변경 등은 로그인 후 수정하시거나 이메일로 요청해 주세요.
+</div>
 
 {% if count %}
 <div class="gizadb">
@@ -109,5 +118,5 @@ function onKeyPress(e) {
 {% endif %}
 
 <div class="footer">
-<strike>게시판</strike> | <a href="http://todayhumor.com/?bestofbest_334264" target="_blank">소개</a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
+<strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">소개</a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
 {% endblock %}

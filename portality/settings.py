@@ -223,3 +223,5 @@ MEDIA_CHOICE = ( # 매체 종류
          ('헤럴드경제', '헤럴드경제'),
     )
 GIZA_IMAGE_SIZE_LIMIT = 100 * 1024 # 기자 사진 사이즈 제한
+
+ABOUT_LINK = "http://todayhumor.com/?bestofbest_335548"
