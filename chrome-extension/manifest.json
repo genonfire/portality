@@ -23,5 +23,5 @@
   "manifest_version": 2,
   "name": "버스터 콜",
   "description": "현재 보고 있는 기사에 버스터 콜을 날립니다.",
-  "version": "0.8"
+  "version": "0.9"
 }
