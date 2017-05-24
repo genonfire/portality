@@ -34,6 +34,18 @@ def show_all_issues(request):
         }
     )
 
+@login_required
+def show_recent_issues(request):
+    issues = Issue.objects.all().order_by('-datetime')[0:100]
+
+    return render(
+        request,
+        "hotissue.html",
+        {
+            'issues' : issues,
+        }
+    )
+
 def show_issues(request):
     startdate = timezone.now() - timezone.timedelta(days=settings.FILTER_DATE_DELTA)
     enddate = timezone.now()
