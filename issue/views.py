@@ -117,17 +117,10 @@ def api_issue(request):
         serializer = IssueSerializer(issues, many=True)
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'POST':
-        articleCheck = Issue.objects.filter(url=request.POST['url'])
-        if articleCheck.count() == 1:
-            serializer = IssueSerializer(data=request.POST)
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(serializer.data, status=201)
-        elif articleCheck.count() == 0:
-            serializer = IssueSerializer(data=request.POST)
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(serializer.data, status=201)
+        serializer = IssueSerializer(data=request.POST)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
 def getKey(item):

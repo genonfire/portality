@@ -10,7 +10,8 @@ class IssueSerializer(serializers.Serializer):
     count = serializers.IntegerField(default=1)
 
     def create(self, validated_data):
-        if validated_data.get('email'):
+        new_email = validated_data.get('email')
+        if new_email:
             issue, created = Issue.objects.get_or_create(
             url=validated_data.get('url', None),
             defaults={'url': validated_data.get('url', None),
@@ -27,5 +28,8 @@ class IssueSerializer(serializers.Serializer):
             })
         if not created:
             issue.count = issue.count + 1
+            if new_email and not issue.email:
+                print "new email exist"
+                issue.email = new_email
             issue.save()
         return issue
