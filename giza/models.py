@@ -3,7 +3,6 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.exceptions import ValidationError
-from django.dispatch import receiver
 
 def validate_image(attached):
     size = attached.file.size
