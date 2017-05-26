@@ -29,7 +29,7 @@ if (os.environ.has_key('DJANGO_DEBUG')):
     if (os.environ['DJANGO_DEBUG'] == 'Debug'):
         DEBUG = True
 
-ALLOWED_HOSTS = ['gencode.me', 'localhost',]
+ALLOWED_HOSTS = ['nolooknews.com', 'gencode.me', 'localhost',]
 
 
 # Application definition

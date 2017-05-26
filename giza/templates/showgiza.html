@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}기레기 감시 시스템 - 기자 지구{% endblock %}
+{% block title %}노룩뉴스 - 기자 지구{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,7 +61,7 @@ function onKeyPress(e) {
 {% block content %}
 <table class="headMenu">
 <tr>
-    <td class="menuHotIssue"><a href="{% url 'show issues' %}">버스터 콜</a></td>
+    <td class="menuHotIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
     <td class="menuRanking"><a href="{% url 'ranking' %}">랭킹</a></td>
     <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
     <td class="headMenu">
@@ -118,5 +118,5 @@ function onKeyPress(e) {
 {% endif %}
 
 <div class="footer">
-<strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">소개</a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
+<strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">노룩뉴스 </a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
 {% endblock %}

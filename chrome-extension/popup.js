@@ -14,7 +14,7 @@ function claim(e) {
   }
 
   $.ajax({
-    url: 'http://portal.gencode.me/api/call/',
+    url: 'http://nolooknews.com/api/call/',
     method: 'POST',
     crossDomain: false,
     dataType: 'json',

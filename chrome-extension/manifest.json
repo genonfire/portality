@@ -6,7 +6,7 @@
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html",
-    "default_title": "버스터 콜"
+    "default_title": "노룩뉴스 - 버스터 콜"
   },
   "icons": {
     "128": "icon.png",
@@ -18,10 +18,11 @@
     "tabs",
     "activeTab",
     "http://localhost:8000/*",
+    "http://*.nolooknews.com/*",
     "http://*.gencode.me/*"
   ],
   "manifest_version": 2,
-  "name": "버스터 콜",
+  "name": "노룩뉴스 - 버스터 콜",
   "description": "현재 보고 있는 기사에 버스터 콜을 날립니다.",
-  "version": "0.9"
+  "version": "1.0"
 }
