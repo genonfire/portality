@@ -5,4 +5,4 @@ from django import forms
 class IssueEditForm(forms.ModelForm):
     class Meta:
         model = Issue
-        exclude = ('datetime', 'count', 'claimusers',)
+        exclude = ('datetime', 'count', 'goodcount', 'claimusers',)

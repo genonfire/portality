@@ -9,6 +9,7 @@ div.input_required {
     padding: 4px; padding-left: 10px;
     border: 1px solid #8298a6;
     background-color: #8298a6;
+    color: white;
     font-weight: bold;
 }
 </style>
@@ -23,7 +24,12 @@ div.input_required {
     {{ form.errors }}
     {{ form.non_field_errors }}
 
-    <div class="input_required">
+    {% if created_at %}
+    <p><font color="#48E">좋아요!: {{goodcount}}</font> <font color="#707070">나빠요!: {{count}}</font></p>
+    {% else %}
+    <p>{% if nolook == 'nolook' %}<font color="#707070">나쁜{% else %}<font color="#48E">좋은{% endif %} 뉴스를 추가합니다.</font></p>
+    {% endif %}
+    <div class="input_required" id="input_required">
     <p>기사 제목: {{form.subject}}</p>
     <p>기사 주소: {{form.url}}</p>
     </div>
@@ -36,6 +42,18 @@ div.input_required {
     <p><font size="2">입력: {{created_at|date:"Y-m-d H:i:s"}}</font></p>
     {% endif %}
     </div>
+    <script>
+    function checkType() {
+        var checkType = document.getElementById('id_nolook').checked;
+        if (checkType == true) {
+            $('#input_required').css('background-color', '#707070');
+        }
+        else {
+            $('#input_required').css('background-color', '#8298a6');
+        }
+    }
+    window.onload = checkType();
+    </script>
     <p><input type="reset" style="border-color:blue"> <input type="submit"></p>
 </form>
 <script>

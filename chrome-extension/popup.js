@@ -2,6 +2,7 @@ function claim(e) {
   var email = document.getElementById("email").value;
   var subject = document.getElementById("subject").value;
   var url = document.getElementById("url").value;
+  var nolook = $('input[name=nolook]:checked').val() == 'true' ? true : false
 
   if (!subject || !url) {
     var empty = "";
@@ -22,10 +23,15 @@ function claim(e) {
       'email': email,
       'subject': subject,
       'url': url,
+      'nolook': nolook,
       'claimusers': ''
     },
     success: function(data) {
-      $('#content').html(data['count'] + "번째 버스터 콜을 날렸습니다.");
+      if (nolook)
+        msg = '나빠요!'
+      else
+        msg = '좋아요!'
+      $('#content').html(data + "번째 " + msg + "를 날렸습니다.");
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
       $('#content').html(errorThrown);

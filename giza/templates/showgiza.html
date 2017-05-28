@@ -55,7 +55,8 @@ function onKeyPress(e) {
 {% block content %}
 <table class="headMenu">
 <tr>
-    <td class="menuHotIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
+    <td class="menuBadIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
+    <td class="menuGoodIssue"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></td>
     <td class="menuRanking"><a href="{% url 'ranking' %}">랭킹</a></td>
     <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
     <td class="headMenu">
@@ -88,7 +89,7 @@ function onKeyPress(e) {
     <table class="gizadb">
     <tr>
         <td rowspan="3" class="gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="120" height="160">{% else %}<img src="{% static 'images/nophoto.png' %}" width="120" height="160">{% endif %}</td>
-        <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}}) <font size="2">[ <a href="{% url 'search issue' searchType='email' searchWord=giza.email %}">작성 기사</a> | <a href="{% url 'search issue' searchType='belongto' searchWord=giza.belongto %}">언론사 기사</a> ]</font></td>
+        <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}}) <font size="2">[ <a href="{% url 'search good issue' searchType='email' searchWord=giza.email nolook='all' %}">작성 기사</a> | <a href="{% url 'search good issue' searchType='belongto' searchWord=giza.belongto nolook='all' %}">언론사 기사</a> ]</font></td>
     </tr>
     <tr>
         <td class="gizaBelong"><a href="{% url 'search giza' searchType='belongto' searchWord=giza.belongto %}">{{giza.belongto}}</a>

@@ -28,6 +28,12 @@ td.gizaProfile {
     vertical-align: top;
     color: #D8D8D8;
 }
+span.ranking {
+    background-color: #744791;
+}
+span.ranqueen {
+    background-color: #5e3975;
+}
 a:link {color:white; text-decoration:none;}
 a:visited {color:white; text-decoration:none;}
 a:hover {color:yellow; text-decoration:none;}
@@ -36,25 +42,38 @@ a:hover {color:yellow; text-decoration:none;}
 {% block content %}
 <table class="headMenu">
 <tr>
-    <td class="menuHotIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
+    <td class="menuBadIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
+    <td class="menuGoodIssue"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></td>
     <td class="menuRanking"><a href="{% url 'ranking' %}">랭킹</a></td>
     <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
     <td class="headMenu">
     {% if user.is_authenticated %}
-    <a href="{% url 'logout' %}?next={% url 'show issues' %}"><img src="{% static 'icons/unidentity24.png' %}" title="로그아웃"></a>
+    <a href="{% url 'logout' %}?next={% url 'ranking' %}"><img src="{% static 'icons/unidentity24.png' %}" title="로그아웃"></a>
     {% else %}
-    <a href="{% url 'login' %}?next={% url 'show issues' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
+    <a href="{% url 'login' %}?next={% url 'ranking' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
     {% endif %}&nbsp;
     </td>
 </tr>
 </table>
 <div class="annotation padding-top">
-지난 한 달간 가장 많이 '찍힌' 기사를 작성한 기자들의 순위입니다.
+{% if nolook == 'nolook' %}
+지난 한 달간 가장 많이 '나빠요!'를 받은 기자들의 순위입니다. <span class="ranking"><a href="{% url 'ranqueen' nolook='look' %}">좋아요! 순위 보기</a></span>
+{% else %}
+지난 한 달간 가장 많이 '좋아요!'를 받은 기자들의 순위입니다. <span class="ranqueen"><a href="{% url 'ranking' %}">나빠요! 순위 보기</a></span>
+{% endif %}
 </div>
 
+{% if nolook == 'nolook' %}
 <div class="ranking">
+{% else %}
+<div class="ranqueen">
+{% endif %}
 {% for giza, count in lists %}
+    {% if nolook == 'nolook' %}
     <table class="ranking">
+    {% else %}
+    <table class="ranqueen">
+    {% endif %}
     <tr>
         <td rowspan="3" class="rankNo">{{forloop.counter}}</td>
         <td rowspan="3" class="rankCount">{{count}}<font size="1">번 찍힘</font></td>

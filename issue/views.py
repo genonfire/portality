@@ -23,70 +23,106 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 @user_passes_test(lambda u: u.is_superuser)
-def show_all_issues(request):
-    issues = Issue.objects.all().order_by('-datetime')
+def show_all_issues(request, nolook):
+    if nolook == 'nolook':
+        issues = Issue.objects.filter(count__gte=1).order_by('-datetime')
+    else:
+        issues = Issue.objects.filter(goodcount__gte=1).order_by('-datetime')
 
     return render(
         request,
         "hotissue.html",
         {
             'issues' : issues,
+            'nolook' : nolook,
         }
     )
 
 @login_required
-def show_recent_issues(request):
-    issues = Issue.objects.all().order_by('-datetime')[0:100]
+def show_recent_issues(request, nolook):
+    if nolook == 'nolook':
+        issues = Issue.objects.filter(count__gte=1).order_by('-datetime')[0:100]
+    else:
+        issues = Issue.objects.filter(goodcount__gte=1).order_by('-datetime')[0:100]
 
     return render(
         request,
         "hotissue.html",
         {
             'issues' : issues,
+            'nolook' : nolook,
         }
     )
 
-def show_issues(request):
+def show_issues(request, nolook='nolook'):
     startdate = timezone.now() - timezone.timedelta(days=settings.FILTER_DATE_DELTA)
     enddate = timezone.now()
-    issues = Issue.objects.filter(datetime__range=(startdate, enddate)).order_by('-count')[0:settings.HOTISSUE_LIMIT]
+    if nolook == 'nolook':
+        issues = Issue.objects.filter(count__gte=1).filter(datetime__range=(startdate, enddate)).order_by('-count')[0:settings.HOTISSUE_LIMIT]
+    else:
+        issues = Issue.objects.filter(goodcount__gte=1).filter(datetime__range=(startdate, enddate)).order_by('-goodcount')[0:settings.HOTISSUE_LIMIT]
 
     return render(
         request,
         "hotissue.html",
         {
             'issues' : issues,
+            'nolook' : nolook,
         }
     )
 
-def search_issue(request, searchType, searchWord):
-    issues = None
-    if searchType == "subject":
-        issues = Issue.objects.filter(subject__icontains=searchWord).order_by('-count', '-datetime')
-    elif searchType == "url":
-        issues = Issue.objects.filter(url__iexact=searchWord).order_by('-count', '-datetime')
-    elif searchType == "email":
-        issues = Issue.objects.filter(email__icontains=searchWord).order_by('-count', '-datetime')
-    elif searchType == "name":
-        giza = Giza.objects.filter(name__iexact=searchWord)
-        if giza.exists():
-            emails = giza.values_list('email', flat=True)
-            issues = Issue.objects.filter(email__in=emails)
-    elif searchType == "belongto":
-        giza = Giza.objects.filter(belongto__icontains=searchWord)
-        if giza.exists():
-            emails = giza.values_list('email', flat=True)
-            issues = Issue.objects.filter(email__in=emails)
+def search_issue(request, searchType, searchWord, nolook='nolook'):
+    issues = nolookissues = lookissues = None
+
+    if nolook == 'nolook' or nolook == 'all':
+        if searchType == "subject":
+            nolookissues = Issue.objects.filter(count__gte=1).filter(subject__icontains=searchWord).order_by('-count', '-datetime')
+        elif searchType == "url":
+            nolookissues = Issue.objects.filter(count__gte=1).filter(url__iexact=searchWord).order_by('-count', '-datetime')
+        elif searchType == "email":
+            nolookissues = Issue.objects.filter(count__gte=1).filter(email__icontains=searchWord).order_by('-count', '-datetime')
+        elif searchType == "name":
+            giza = Giza.objects.filter(name__iexact=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                nolookissues = Issue.objects.filter(count__gte=1).filter(email__in=emails)
+        elif searchType == "belongto":
+            giza = Giza.objects.filter(belongto__icontains=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                nolookissues = Issue.objects.filter(count__gte=1).filter(email__in=emails)
+        issues = nolookissues
+    if nolook == 'look' or nolook == 'all':
+        if searchType == "subject":
+            lookissues = Issue.objects.filter(goodcount__gte=1).filter(subject__icontains=searchWord).order_by('-goodcount', '-datetime')
+        elif searchType == "url":
+            lookissues = Issue.objects.filter(goodcount__gte=1).filter(url__iexact=searchWord).order_by('-goodcount', '-datetime')
+        elif searchType == "email":
+            lookissues = Issue.objects.filter(goodcount__gte=1).filter(email__icontains=searchWord).order_by('-goodcount', '-datetime')
+        elif searchType == "name":
+            giza = Giza.objects.filter(name__iexact=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                lookissues = Issue.objects.filter(goodcount__gte=1).filter(email__in=emails)
+        elif searchType == "belongto":
+            giza = Giza.objects.filter(belongto__icontains=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                lookissues = Issue.objects.filter(goodcount__gte=1).filter(email__in=emails)
+        issues = lookissues
 
     return render(
         request,
         "hotissue.html",
         {
+            'nolookissues' : nolookissues,
+            'lookissues' : lookissues,
             'issues' : issues,
+            'nolook' : nolook,
         }
     )
 
-def new_issue(request):
+def new_issue(request, nolook='nolook'):
     if request.method == "POST":
         editform = IssueEditForm(request.POST, request.FILES)
         if editform.is_valid():
@@ -116,6 +152,7 @@ def new_issue(request):
         'editissue.html',
         {
             'form': editform,
+            'nolook': nolook,
         }
     )
 
@@ -138,6 +175,8 @@ def edit_issue(request, id):
             'form': editform,
             'created_at': issue.datetime,
             'id': id,
+            'count': issue.count,
+            'goodcount': issue.goodcount,
         }
     )
 
@@ -160,22 +199,32 @@ def api_issue(request):
         serializer = IssueSerializer(data=request.POST)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
+            if request.POST['nolook'] == u'true':
+                count = serializer.data['count']
+            else:
+                count = serializer.data['goodcount']
+            return JsonResponse([count,], safe=False, status=201)
         return JsonResponse(serializer.errors, status=400)
 
 def getKey(item):
     return item[1]
 
-def ranking(request):
+def ranking(request, nolook='nolook'):
     startdate = timezone.now() - timezone.timedelta(days=settings.RANKING_DATE_DELTA)
     enddate = timezone.now()
-    issues = Issue.objects.exclude(email__iexact='').filter(datetime__range=(startdate, enddate)).order_by('email', '-count').select_related('email', 'count')
+    if nolook == 'nolook':
+        issues = Issue.objects.filter(count__gte=1).exclude(email__iexact='').filter(datetime__range=(startdate, enddate)).order_by('email', '-count').select_related('email', 'count')
+    else:
+        issues = Issue.objects.filter(goodcount__gte=1).exclude(email__iexact='').filter(datetime__range=(startdate, enddate)).order_by('email', '-goodcount').select_related('email', 'goodcount')
     emails = issues.distinct('email').values_list('email', flat=True)
 
     countList = []
 
     for email in emails:
-        count = issues.filter(email__iexact=email).aggregate(total_count=Sum('count'))
+        if nolook == 'nolook':
+            count = issues.filter(email__iexact=email).aggregate(total_count=Sum('count'))
+        else:
+            count = issues.filter(email__iexact=email).aggregate(total_count=Sum('goodcount'))
         giza = Giza.objects.filter(email__iexact=email)
         if giza.exists():
             countList.append((giza[0], count['total_count']))
@@ -187,5 +236,6 @@ def ranking(request):
         "ranking.html",
         {
             'lists': listRank,
+            'nolook': nolook,
         }
     )
