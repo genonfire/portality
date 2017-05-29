@@ -41,9 +41,9 @@ class IssueSerializer(serializers.Serializer):
             if claimusers not in existusers:
                 issue.claimusers += "," + claimusers
                 if nolook:
-                    issue.count = issue.count + 1
+                    issue.count += 1
                 else:
-                    issue.goodcount = issue.goodcount + 1
+                    issue.goodcount += 1
             if new_email and not issue.email:
                 issue.email = new_email
         else:

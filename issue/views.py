@@ -136,14 +136,14 @@ def new_issue(request, nolook='nolook'):
                     ip = get_ipaddress(request)
                     if ip not in claimusers:
                         updateArticle.claimusers += "," + ip
-                        updateArticle.count = updateArticle.count + 1
+                        updateArticle.count += 1
                     updateArticle.save()
-                    return redirect(articleCheck.get_absolute_url())
+                    return redirect(articleCheck.get_absolute_url(nolook))
             except ObjectDoesNotExist:
                 article.count = 1
                 article.claimusers = get_ipaddress(request)
                 article.save()
-                return redirect(article.get_absolute_url())
+                return redirect(article.get_absolute_url(nolook))
     elif request.method == "GET":
         editform = IssueEditForm()
 
@@ -164,6 +164,8 @@ def edit_issue(request, id):
         editform = IssueEditForm(request.POST, request.FILES, instance=issue)
         if editform.is_valid():
             editform.save()
+            if issue.goodcount > issue.count:
+                return redirect(issue.get_absolute_url('look'))
             return redirect(issue.get_absolute_url())
     elif request.method == "GET":
         editform = IssueEditForm(instance=issue)
@@ -186,6 +188,28 @@ def delete_issue(request, id):
     issue.delete()
 
     return redirect(issue.get_absolute_url())
+
+def thumb_down(request, id):
+    issue = get_object_or_404(Issue, pk = id)
+
+    claimusers = issue.claimusers.split(',')
+    ip = get_ipaddress(request)
+    if ip not in claimusers:
+        issue.claimusers += "," + ip
+        issue.count += 1
+        issue.save()
+    return HttpResponse(status=204)
+
+def thumb_up(request, id):
+    issue = get_object_or_404(Issue, pk = id)
+
+    claimusers = issue.claimusers.split(',')
+    ip = get_ipaddress(request)
+    if ip not in claimusers:
+        issue.claimusers += "," + ip
+        issue.goodcount += 1
+        issue.save()
+    return HttpResponse(status=204)
 
 @csrf_exempt
 def api_issue(request):

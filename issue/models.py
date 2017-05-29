@@ -15,5 +15,5 @@ class Issue(models.Model):
     goodcount = models.IntegerField(default=0)
     claimusers = models.TextField(default='', blank=True)
 
-    def get_absolute_url(self):
-        return reverse_lazy('show issues')
+    def get_absolute_url(self, nolook='nolook'):
+        return reverse_lazy('show good issues', kwargs={'nolook': nolook})
