@@ -170,7 +170,7 @@ LOGIN_REDIRECT_URL = 'login'
 
 
 # Setting for ranking
-RANKING_DATE_DELTA = 30 # 랭킹 계산에 포함될 시간(일)
+RANKING_DATE_DELTA = 7 # 랭킹 계산에 포함될 시간(일)
 RANKING_LIST_LIMIT = 20
 
 # Setting for issue
