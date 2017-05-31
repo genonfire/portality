@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -263,3 +264,49 @@ def ranking(request, nolook='nolook'):
             'nolook': nolook,
         }
     )
+
+def rank_archive(request, year, month, nolook='nolook'):
+    inyear = int(year)
+    inmonth = int(month)
+    if inmonth > 0 and inmonth <= 12:
+        now = timezone.now()
+        startdate = now.replace(year=inyear, month=inmonth, day=1, hour=0, minute=0, second=0, microsecond=0)
+        enddate = startdate.replace(month=inmonth+1)
+
+        if nolook == 'nolook':
+            issues = Issue.objects.filter(count__gte=1).exclude(email__iexact='').filter(datetime__range=(startdate, enddate)).order_by('email', '-count').select_related('email', 'count')
+        else:
+            issues = Issue.objects.filter(goodcount__gte=1).exclude(email__iexact='').filter(datetime__range=(startdate, enddate)).order_by('email', '-goodcount').select_related('email', 'goodcount')
+        emails = issues.distinct('email').values_list('email', flat=True)
+
+        countList = []
+
+        for email in emails:
+            if nolook == 'nolook':
+                count = issues.filter(email__iexact=email).aggregate(total_count=Sum('count'))
+            else:
+                count = issues.filter(email__iexact=email).aggregate(total_count=Sum('goodcount'))
+            giza = Giza.objects.filter(email__iexact=email)
+            if giza.exists():
+                countList.append((giza[0], count['total_count']))
+
+        listRank = sorted(countList, key=getKey, reverse=True)[0:settings.RANKING_LIST_LIMIT]
+
+        if nolook == 'nolook':
+            nolookmsg = u'나빠요!'
+        else:
+            nolookmsg = u'좋아요!'
+
+        msg = u'%s년 %s월 %s를 가장 많이 받은 기자들의 순위입니다.' % (year, month, nolookmsg)
+
+        return render(
+            request,
+            "ranking.html",
+            {
+                'lists': listRank,
+                'nolook': nolook,
+                'msg': msg,
+            }
+        )
+    else:
+        return HttpResponse(u"기간 설정 오류")

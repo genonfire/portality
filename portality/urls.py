@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^issue/recent/(?P<nolook>\w+)$', 'issue.views.show_recent_issues', name="show recent issues"),
     url(r'^ranking/$', 'issue.views.ranking', name="ranking"),
     url(r'^ranking/(?P<nolook>\w+)$', 'issue.views.ranking', name="ranqueen"),
+    url(r'^ranking/(?P<year>\d+)/(?P<month>\d+)/(?P<nolook>\w+)$', 'issue.views.rank_archive', name="rank archive"),
     url(r'^issue/new/(?P<nolook>\w+)$', 'issue.views.new_issue', name="new issue"),
     url(r'^issue/(?P<id>\d+)/edit/$', 'issue.views.edit_issue', name="edit issue"),
     url(r'^issue/(?P<id>\d+)/delete/$', 'issue.views.delete_issue', name="delete issue"),
