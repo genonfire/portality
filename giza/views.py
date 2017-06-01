@@ -12,6 +12,7 @@ from smtplib import SMTPException
 from django.core.signing import Signer, TimestampSigner
 from django.core.context_processors import csrf
 from django.conf import settings
+from portality.utils import *
 
 from models import Giza
 from giza.forms import GizaEditForm, RegistrationForm
@@ -24,9 +25,13 @@ sys.setdefaultencoding('utf-8')
 def show_all_giza(request):
     db = Giza.objects.order_by('belongto').all()
 
+    template = "showgiza.html"
+    if is_mobile(request):
+        template = "m-showgiza.html"
+
     return render(
         request,
-        "showgiza.html",
+        template,
         {
             'db': db,
             'count': db.count(),
@@ -55,15 +60,23 @@ def show_giza(request):
     for i in month_range(startmonth, startyear, nowmonth, nowyear):
         monthList.append(i)
 
+    template = "showgiza.html"
+    if is_mobile(request):
+        template = "m-showgiza.html"
+
     return render(
         request,
-        "showgiza.html",
+        template,
         {
             'count': 0,
             'lists': reversed(monthList),
         })
 
 def search_giza(request, searchType, searchWord):
+    template = "showgiza.html"
+    if is_mobile(request):
+        template = "m-showgiza.html"
+
     if searchType == "name":
         db = Giza.objects.filter(name__iexact=searchWord).order_by('belongto')
     elif searchType == "email":
@@ -77,7 +90,7 @@ def search_giza(request, searchType, searchWord):
     else:
         return render(
             request,
-            "showgiza.html",
+            template,
             {
                 'count': 0,
             }
@@ -85,7 +98,7 @@ def search_giza(request, searchType, searchWord):
 
     return render(
         request,
-        "showgiza.html",
+        template,
         {
             'db': db,
             'count': db.count(),

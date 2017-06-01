@@ -5,13 +5,18 @@
 {{ block.super }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+html, body, div, table, td, p, span {
+    margin:0;  
+    padding:0;  
+    -webkit-text-size-adjust:none;  
+}
 td.issueRank {
     width: 40px;
     font-size: 130%;
     color: yellow;
 }
 td.issueSubject {
-    font-size: 130%;
+    /*font-size: 130%;*/
 }
 td.issueDown {
     font-size: 75%;
@@ -47,43 +52,30 @@ function search(nolook) {
     }
     location.href = url;
 }
-
-function onKeyPress(e, nolook) {
-    if (e.keyCode == 13) {
-        e.preventDefault();
-        search(nolook);
-    }
-}
 </script>
 {% endblock %}
 {% block content %}
-<table class="headMenu">
+<table class="m-headMenu">
 <tr>
-    <td class="menuBadIssue width-100"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
-    <td class="menuGoodIssue width-100"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></td>
-    <td class="menuRanking width-100"><a href="{% url 'ranking' %}">랭킹</a></td>
-    <td class="menuGizaDB width-100"><a href="{% url 'show giza' %}">기자 지구</a></td>
-    <td class="headMenu">
+    <td colspan="3"><img src="{{LOGO_NAME}}"></td>
+    <td class="headMenu align-right">
     {% if user.is_authenticated %}
     {% if nolook != 'all' %}<a href="{% url 'new issue' nolook=nolook %}"><img src="{% static 'icons/add24.png' %}" title="이슈 생성"></a> {% endif %}<a href="{% url 'logout' %}?next={% url 'show issues' %}"><img src="{% static 'icons/unidentity24.png' %}" title="로그아웃"></a>
     {% else %}
     <a href="{% url 'login' %}?next={% url 'show issues' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
-    {% endif %}&nbsp;
+    {% endif %}
     </td>
+</tr>
+<tr>
+    <td class="menuBadIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
+    <td class="menuGoodIssue"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></td>
+    <td class="menuRanking"><a href="{% url 'ranking' %}">랭킹</a></td>
+    <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
 </tr>
 </table>
 {% if nolook != 'all' %}
-<div class="dbSearch">
-    <select id="searchType">
-        <option value="belongto">언론사</option>
-        <option value="name">기자 이름</option>
-        <option value="email">기자 이메일</option>
-        <option value="subject">기사 제목</option>
-        <option value="url">기자 URL</option>
-    </select>
-    <input type="text" id="searchWord" class="searchWord width-200" maxlength="254" onkeypress="onKeyPress(event, '{{nolook}}')"> <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search('{{nolook}}')"> {% if nolook == 'nolook' %}<span class="issueshowall"><a href="{% url 'show recent issues' nolook=nolook %}">최근 100개 보기</a></span> {% if user.is_superuser %}<span class="issueshowall"><a href="{% url 'show all issues' nolook=nolook %}">모두 보기</a></span>{% endif %}{% else %}<span class="goodissueshowall"><a href="{% url 'show recent issues' nolook=nolook %}">최근 100개 보기</a></span> {% if user.is_superuser %}<span class="goodissueshowall"><a href="{% url 'show all issues' nolook=nolook %}">모두 보기</a></span>{% endif %}{% endif %}
-</div>
-<div class="annotation">
+
+<div class="annotation padding-top">
 {% if nolook == 'nolook' %}
 일주일 동안 가장 많이 '나빠요!'를 받은 뉴스의 순위입니다.
 {% else %}
@@ -98,13 +90,11 @@ function onKeyPress(e, nolook) {
     <table class="issue">
     <tr>
         <td rowspan="2" class="issueRank" align="center">{{forloop.counter}}</td>
-        <td class="issueSubject"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}" target="_blank"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
-        {% if user.is_authenticated %}
-        <td rowspan="2" width="32px"><a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit24.png' %}" title="편집"></a></td>
-        {% endif %}
+        <td class="issueSubject" colspan="2"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}" target="_blank"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
     </tr>
     <tr>
         <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}">{{issue.email}}</a> (나빠요! {{issue.count}}번) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
+        <td width="20">{% if user.is_authenticated %}<a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit16.png' %}" title="편집"></a>{% endif %}</td>
     </tr>
     </table>
     {% if not forloop.last %}
@@ -117,13 +107,11 @@ function onKeyPress(e, nolook) {
     <table class="goodIssue">
     <tr>
         <td rowspan="2" class="issueRank" align="center">{{forloop.counter}}</td>
-        <td class="issueSubject"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}" target="_blank"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
-        {% if user.is_authenticated %}
-        <td rowspan="2" width="32px"><a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit24.png' %}" title="편집"></a></td>
-        {% endif %}
+        <td class="issueSubject" colspan="2"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}" target="_blank"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
     </tr>
     <tr>
         <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}">{{issue.email}}</a> (좋아요! {{issue.goodcount}}번) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
+        <td width="20">{% if user.is_authenticated %}<a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit16.png' %}" title="편집"></a>{% endif %}</td>
     </tr>
     </table>
     {% if not forloop.last %}
@@ -146,19 +134,31 @@ function onKeyPress(e, nolook) {
     {% endif %}
     <tr>
         <td rowspan="2" class="issueRank" align="center">{{forloop.counter}}</td>
-        <td class="issueSubject"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}" target="_blank"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
-        {% if user.is_authenticated %}
-        <td rowspan="2" width="32px"><a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit24.png' %}" title="편집"></a></td>
-        {% endif %}
+        <td class="issueSubject" colspan="2"><a href="{{issue.url}}" target="_blank">{{issue.subject}}</a> {% if issue.archive %}<a href="{{issue.archive}}" target="_blank"><img src="{% static 'icons/unarchive18.png' %}"></a>{% endif %}</td>
     </tr>
     <tr>
         <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}">{{issue.email}}</a> ({% if nolook == 'nolook' %}나빠요! {{issue.count}}{% else %}좋아요! {{issue.goodcount}}{% endif %}번) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
+        <td width="20">{% if user.is_authenticated %}<a href="{% url 'edit issue' id=issue.id %}"><img src="{% static 'icons/edit16.png' %}" title="편집"></a>{% endif %}</td>
     </tr>
     </table>
     {% if not forloop.last %}
         <hr>
     {% endif %}
 {% endfor %}
+</div>
+{% endif %}
+
+{% if nolook != 'all' %}
+<div class="dbSearch align-center">
+    <select id="searchType">
+        <option value="belongto">언론사</option>
+        <option value="name">기자 이름</option>
+        <option value="email">기자 이메일</option>
+        <option value="subject">기사 제목</option>
+        <option value="url">기자 URL</option>
+    </select>
+    <input type="text" id="searchWord" class="searchWord width-140" maxlength="254"> <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search('{{nolook}}')">
+    <p class="padding-top-10 align-right">{% if nolook == 'nolook' %}<span class="issueshowall"><a href="{% url 'show recent issues' nolook=nolook %}">최근 100개 보기</a></span> {% if user.is_superuser %}<span class="issueshowall"><a href="{% url 'show all issues' nolook=nolook %}">모두 보기</a></span>{% endif %}{% else %}<span class="goodissueshowall"><a href="{% url 'show recent issues' nolook=nolook %}">최근 100개 보기</a></span> {% if user.is_superuser %}<span class="goodissueshowall"><a href="{% url 'show all issues' nolook=nolook %}">모두 보기</a></span>{% endif %}{% endif %}</p>
 </div>
 {% endif %}
 

@@ -173,7 +173,7 @@ LOGIN_REDIRECT_URL = 'login'
 RANKING_START_YEAR = 2017
 RANKING_START_MONTH = 5
 RANKING_DATE_DELTA = 7 # 랭킹 계산에 포함될 시간(일)
-RANKING_LIST_LIMIT = 20 # 보여줄 순위
+RANKING_LIST_LIMIT = 10 # 보여줄 순위
 
 # Setting for issue
 FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)
@@ -228,3 +228,4 @@ MEDIA_CHOICE = ( # 매체 종류
 GIZA_IMAGE_SIZE_LIMIT = 100 * 1024 # 기자 사진 사이즈 제한
 
 ABOUT_LINK = "http://todayhumor.com/?bestofbest_335548"
+LOGO_NAME = "/assets/images/nolooknews.png"

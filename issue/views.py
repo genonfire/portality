@@ -30,9 +30,13 @@ def show_all_issues(request, nolook):
     else:
         issues = Issue.objects.filter(goodcount__gte=1).order_by('-datetime')
 
+    template = "hotissue.html"
+    if is_mobile(request):
+        template = "m-hotissue.html"
+
     return render(
         request,
-        "hotissue.html",
+        template,
         {
             'issues' : issues,
             'nolook' : nolook,
@@ -46,9 +50,13 @@ def show_recent_issues(request, nolook):
     else:
         issues = Issue.objects.filter(goodcount__gte=1).order_by('-datetime')[0:100]
 
+    template = "hotissue.html"
+    if is_mobile(request):
+        template = "m-hotissue.html"
+
     return render(
         request,
-        "hotissue.html",
+        template,
         {
             'issues' : issues,
             'nolook' : nolook,
@@ -63,9 +71,14 @@ def show_issues(request, nolook='nolook'):
     else:
         issues = Issue.objects.filter(goodcount__gte=1).filter(datetime__range=(startdate, enddate)).order_by('-goodcount')[0:settings.HOTISSUE_LIMIT]
 
+    template = "hotissue.html"
+    if is_mobile(request):
+        template = "m-hotissue.html"
+    print template
+
     return render(
         request,
-        "hotissue.html",
+        template,
         {
             'issues' : issues,
             'nolook' : nolook,
@@ -112,9 +125,13 @@ def search_issue(request, searchType, searchWord, nolook='nolook'):
                 lookissues = Issue.objects.filter(goodcount__gte=1).filter(email__in=emails)
         issues = lookissues
 
+    template = "hotissue.html"
+    if is_mobile(request):
+        template = "m-hotissue.html"
+
     return render(
         request,
-        "hotissue.html",
+        template,
         {
             'nolookissues' : nolookissues,
             'lookissues' : lookissues,
@@ -256,9 +273,13 @@ def ranking(request, nolook='nolook'):
 
     listRank = sorted(countList, key=getKey, reverse=True)[0:settings.RANKING_LIST_LIMIT]
 
+    template = "ranking.html"
+    if is_mobile(request):
+        template = "m-ranking.html"
+
     return render(
         request,
-        "ranking.html",
+        template,
         {
             'lists': listRank,
             'nolook': nolook,
@@ -299,9 +320,13 @@ def rank_archive(request, year, month, nolook='nolook'):
 
         msg = u'%s년 %s월 %s를 가장 많이 받은 기자들의 순위입니다.' % (year, month, nolookmsg)
 
+        template = "ranking.html"
+        if is_mobile(request):
+            template = "m-ranking.html"
+
         return render(
             request,
-            "ranking.html",
+            template,
             {
                 'lists': listRank,
                 'nolook': nolook,
