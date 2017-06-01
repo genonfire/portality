@@ -33,12 +33,34 @@ def show_all_giza(request):
         }
     )
 
+def daterange(start_date, end_date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timezone.timedelta(n)
+
+def month_range(startmonth, startyear, endmonth, endyear ):
+    rangeStart = startyear * 12 + startmonth - 1
+    rangeEnd = endyear * 12 + endmonth - 1
+    for i in range(rangeStart, rangeEnd):
+        y, m = divmod(i, 12)
+        yield y, m + 1
+
 def show_giza(request):
+    now = timezone.now()
+    startyear = settings.RANKING_START_YEAR
+    startmonth = settings.RANKING_START_MONTH
+    nowyear = now.year
+    nowmonth = now.month
+    monthList = []
+
+    for i in month_range(startmonth, startyear, nowmonth, nowyear):
+        monthList.append(i)
+
     return render(
         request,
         "showgiza.html",
         {
             'count': 0,
+            'lists': reversed(monthList),
         })
 
 def search_giza(request, searchType, searchWord):

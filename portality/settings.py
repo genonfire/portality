@@ -170,8 +170,10 @@ LOGIN_REDIRECT_URL = 'login'
 
 
 # Setting for ranking
+RANKING_START_YEAR = 2017
+RANKING_START_MONTH = 5
 RANKING_DATE_DELTA = 7 # 랭킹 계산에 포함될 시간(일)
-RANKING_LIST_LIMIT = 20
+RANKING_LIST_LIMIT = 20 # 보여줄 순위
 
 # Setting for issue
 FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)

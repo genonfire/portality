@@ -25,6 +25,13 @@ span.gizashowall {
     font-size: 80%;
 }
 
+div.hof {
+    width: 160px;
+    text-align: center;
+    background-color: #957248;
+    color: #D8D8D8;
+}
+
 a:link {color:white; text-decoration:none;}
 a:visited {color:white; text-decoration:none;}
 a:hover {color:yellow; text-decoration:none;}
@@ -110,6 +117,14 @@ function onKeyPress(e) {
     {% endif %}
 {% endfor %}
 </div>
+{% else %}
+<div align="center"><div class="hof">
+    <p>명예의 전당</p>
+        {% for year, month in lists %}
+        <a href="{% url 'rank archive' year=year month=month nolook='nolook' %}">{{year}}년 {{month}}월</a><br>
+        {% endfor %}
+    </select>
+</div></div>
 {% endif %}
 
 <div class="footer">
