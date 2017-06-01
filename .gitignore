@@ -2,3 +2,4 @@ upload/
 *.sh
 *.pyc
 secrets.json
+analytics.js
