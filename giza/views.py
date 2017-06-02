@@ -239,7 +239,7 @@ def check_email(request):
     id_email = request.POST.get('email')
     signer = TimestampSigner()
     value = signer.sign(id_email)
-    subject = u'[gencode.me] 회원가입 인증 메일입니다.'
+    subject = u'[노룩뉴스] 회원가입 인증 메일입니다.'
     body = u'인증코드(이메일주소 포함): %s' % value
 
     try:
@@ -254,7 +254,7 @@ def send_email(request):
     print "sending email to", id_email
     signer = TimestampSigner()
     value = signer.sign(id_email)
-    subject = u'[gencode.me] 테스트 메일입니다.'
+    subject = u'[노룩뉴스] 테스트 메일입니다.'
     body = u'인증코드(이메일주소 포함): %s' % value
 
     try:
