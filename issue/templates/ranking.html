@@ -44,10 +44,10 @@ a:hover {color:yellow; text-decoration:none;}
 {% block content %}
 <table class="headMenu">
 <tr>
-    <td class="menuBadIssue width-100"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
-    <td class="menuGoodIssue width-100"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></td>
-    <td class="menuRanking width-100"><a href="{% url 'ranking' %}">랭킹</a></td>
-    <td class="menuGizaDB width-100"><a href="{% url 'show giza' %}">기자 지구</a></td>
+    <td class="menuBadIssue width-100"><a href="{% url 'show issues' %}" style="display:block;">노룩뉴스</a></td>
+    <td class="menuGoodIssue width-100"><a href="{% url 'show good issues' nolook='look' %}" style="display:block;">룩!뉴스</a></td>
+    <td class="menuRanking width-100"><a href="{% url 'ranking' %}" style="display:block;">랭킹</a></td>
+    <td class="menuGizaDB width-100"><a href="{% url 'show giza' %}" style="display:block;">기자 지구</a></td>
     <td class="headMenu">
     {% if user.is_authenticated %}
     <a href="{% url 'logout' %}?next={% url 'ranking' %}"><img src="{% static 'icons/unidentity24.png' %}" title="로그아웃"></a>
