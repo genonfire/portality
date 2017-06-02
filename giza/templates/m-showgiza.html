@@ -63,7 +63,7 @@ function search() {
 {% block content %}
 <table class="m-headMenu">
 <tr>
-    <td colspan="3"><img src="{{LOGO_NAME}}"></td>
+    <td colspan="3"><a href="http://nolooknews.com/"><img src="{{LOGO_NAME}}"></a></td>
     <td class="headMenu align-right">
     {% if user.is_authenticated %}
     <a href="{% url 'new giza' %}"><img src="{% static 'icons/add24.png' %}" title="기자 추가"></a> <a href="{% url 'logout' %}?next={% url 'show giza' %}"><img src="{% static 'icons/unidentity24.png' %}" title="로그아웃"></a>
@@ -135,6 +135,7 @@ function search() {
 </div></div>
 {% endif %}
 
+{% if not DEBUG %}
 <div class="sense">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- nolooknews-bottom -->
@@ -147,6 +148,7 @@ function search() {
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 </div>
+{% endif %}
 <div class="footer">
 <strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">노룩뉴스 </a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
 {% endblock %}

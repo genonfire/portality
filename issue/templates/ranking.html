@@ -106,6 +106,7 @@ a:hover {color:yellow; text-decoration:none;}
 {% endfor %}
 </div>
 
+{% if not DEBUG %}
 <div class="sense">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- nolooknews-bottom -->
@@ -118,6 +119,7 @@ a:hover {color:yellow; text-decoration:none;}
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 </div>
+{% endif %}
 <div class="footer">
 <strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">노룩뉴스 </a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
 {% endblock %}

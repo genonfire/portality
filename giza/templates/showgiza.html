@@ -118,7 +118,7 @@ function onKeyPress(e) {
     {% endif %}
 {% endfor %}
 </div>
-{% else %}
+{% elif list %}
 <div align="center"><div class="hof">
     <p>명예의 전당</p>
         {% for year, month in lists %}
@@ -128,6 +128,7 @@ function onKeyPress(e) {
 </div></div>
 {% endif %}
 
+{% if not DEBUG %}
 <div class="sense">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- nolooknews-bottom -->
@@ -140,6 +141,7 @@ function onKeyPress(e) {
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 </div>
+{% endif %}
 <div class="footer">
 <strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">노룩뉴스 </a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
 {% endblock %}
