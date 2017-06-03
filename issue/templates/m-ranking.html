@@ -3,84 +3,39 @@
 {% block title %}노룩뉴스 - 랭킹{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-html, body, div, table, td, p, span {
-    margin:0;  
-    padding:0;  
-    -webkit-text-size-adjust:none;  
-}
-td.rankNo {
-    width: 20px;
-    font-size: 120%;
-    text-align: center;
-    color: yellow;
-}
-td.rankCount {
-    width: 40px;
-    text-align: center;
-    font-size: 100%;
-}
-td.gizaPortrait {
-    width: 100px;
-}
-td.gizaName {
-    height: 30px;
-}
-td.gizaEmail {
-    word-break:break-all;
-    color: #D8D8D8;
-    font-size: 90%;
-}
-td.gizaBelong {
-    height: 32px;
-}
-td.gizaProfile {
-    padding: 2px; padding-top: 10px;
-    vertical-align: top;
-    color: #D8D8D8;
-    font-size: 80%;
-}
-span.ranking {
-    background-color: #744791;
-}
-span.ranqueen {
-    background-color: #5e3975;
-}
-a:link {color:white; text-decoration:none;}
-a:visited {color:white; text-decoration:none;}
-a:hover {color:yellow; text-decoration:none;}
-</style>
 {% endblock %}
 {% block content %}
-<table class="m-headMenu">
-<tr>
-    <td colspan="3"><a href="http://nolooknews.com/"><img src="{{LOGO_NAME}}"></a></td>
-    <td class="headMenu align-right">
+<div id="wrap">
+    <div id="header">
+        <div class="gnb">
+            <ul>
+                <li class="menuBadIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></li>
+                <li class="menuBadIssue"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></li>
+                <li class="menuBadIssue"><a href="{% url 'ranking' %}">랭킹</a></li>
+                <li class="menuBadIssue"><a href="{% url 'show giza' %}">기자지구</a></li>
+            </ul>
+        </div>
+    </div>
+
+<div id="contents">
+<h1>랭킹</h1>
     {% if user.is_authenticated %}
-    <a href="{% url 'logout' %}?next={% url 'ranking' %}"><img src="{% static 'icons/unidentity24.png' %}" title="로그아웃"></a>
+    <div class="m-util utilSolo">
+    <a href="{% url 'login' %}"><img src="{% static 'icons/face24.png' %}" title="회원정보"></a>
     {% else %}
-    <a href="{% url 'login' %}?next={% url 'ranking' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
+    <div class="m-util utilSolo">
+    <a href="{% url 'login' %}?next={% url 'show issues' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
     {% endif %}
-    </td>
-</tr>
-<tr>
-    <td class="menuBadIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></td>
-    <td class="menuGoodIssue"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></td>
-    <td class="menuRanking"><a href="{% url 'ranking' %}">랭킹</a></td>
-    <td class="menuGizaDB"><a href="{% url 'show giza' %}">기자 지구</a></td>
-</tr>
-</table>
+    </div>
+
 <div class="annotation padding-top">
 {% if msg %}
 {{ msg }}
 {% else %}
 {% if nolook == 'nolook' %}
 일주일 동안 가장 많이 '나빠요!'를 받은 기자들의 순위입니다.
-<p class="align-right"><span class="ranking"><a href="{% url 'ranqueen' nolook='look' %}">좋아요! 순위 보기</a></span></p>
 {% else %}
 일주일 동안 가장 많이 '좋아요!'를 받은 기자들의 순위입니다.
-<br><span class="ranqueen"><a href="{% url 'ranking' %}">나빠요! 순위 보기</a></span>
 {% endif %}
 {% endif %}
 </div>
@@ -99,7 +54,7 @@ a:hover {color:yellow; text-decoration:none;}
     <tr>
         <td rowspan="4" class="rankNo">{{forloop.counter}}</td>
         <td rowspan="4" class="rankCount">{{count}}<br><font size="1">찍힘</font></td>
-        <td rowspan="3" class="gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="90" height="120">{% else %}<img src="{% static 'images/nophoto.png' %}" width="90" height="120">{% endif %}</td>
+        <td rowspan="3" class="gizaPortrait m-gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="90" height="120">{% else %}<img src="{% static 'images/nophoto.png' %}" width="90" height="120">{% endif %}</td>
         <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} <font size="2">[ <a href="{% url 'search good issue' searchType='email' searchWord=giza.email nolook='all' %}">작성기사</a> ]</font></td>
     </tr>
     <tr>
@@ -124,6 +79,14 @@ a:hover {color:yellow; text-decoration:none;}
 {% endfor %}
 </div>
 
+<div class="dbSearch align-right">
+{% if nolook == 'nolook' %}
+<span class="ranking"><a href="{% url 'ranqueen' nolook='look' %}">좋아요! 순위 보기</a></span></p>
+{% else %}
+<span class="ranqueen"><a href="{% url 'ranking' %}">나빠요! 순위 보기</a></span>
+{% endif %}
+</div>
+
 {% if not DEBUG %}
 <div class="sense">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -138,6 +101,21 @@ a:hover {color:yellow; text-decoration:none;}
 </script>
 </div>
 {% endif %}
-<div class="footer">
-<strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">노룩뉴스 </a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
+
+</div> <!-- //Contents -->
+
+<div id="footer">
+    <div class="footerMenu">
+        <ul>
+            <li><strike>게시판</strike></li>
+            <li><a href={{ABOUT_LINK}} target="_blank">노룩뉴스 소개</a></li>
+            <li>테마 디자인 : {{THEME_DESIGNER}}</a></li>
+        </ul>
+            <li>문의, 의견 보내기 : <a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></li>
+        <ul>
+        </ul>
+    </div>
+</div>
+
+</div> <!-- //wrap -->
 {% endblock %}

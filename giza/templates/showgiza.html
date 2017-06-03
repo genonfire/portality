@@ -3,41 +3,6 @@
 {% block title %}노룩뉴스 - 기자 지구{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-td.gizaPortrait {
-    width: 140px;
-}
-td.gizaName {
-    height: 30px;
-}
-td.gizaBelong {
-    height: 32px;
-}
-td.gizaProfile {
-    padding: 2px; padding-top: 10px;
-    vertical-align: top;
-    color: #D8D8D8;
-}
-
-span.gizashowall {
-    background-color: #957248;
-    font-size: 80%;
-}
-
-div.hof {
-    margin-bottom: 10px;
-    width: 160px;
-    text-align: center;
-    background-color: #957248;
-    color: #D8D8D8;
-    box-shadow: 0 0 5px 5px #888;
-}
-
-a:link {color:white; text-decoration:none;}
-a:visited {color:white; text-decoration:none;}
-a:hover {color:yellow; text-decoration:none;}
-</style>
 <script>
 function search() {
     var type = document.getElementById('searchType').value;
@@ -62,21 +27,32 @@ function onKeyPress(e) {
 </script>
 {% endblock %}
 {% block content %}
-<table class="headMenu">
-<tr>
-    <td class="menuBadIssue width-100"><a href="{% url 'show issues' %}" style="display:block;">노룩뉴스</a></td>
-    <td class="menuGoodIssue width-100"><a href="{% url 'show good issues' nolook='look' %}" style="display:block;">룩!뉴스</a></td>
-    <td class="menuRanking width-100"><a href="{% url 'ranking' %}" style="display:block;">랭킹</a></td>
-    <td class="menuGizaDB width-100"><a href="{% url 'show giza' %}" style="display:block;">기자 지구</a></td>
-    <td class="headMenu">
-    {% if user.is_authenticated %}
-    <a href="{% url 'new giza' %}"><img src="{% static 'icons/add24.png' %}" title="기자 추가"></a> <a href="{% url 'logout' %}?next={% url 'show giza' %}"><img src="{% static 'icons/unidentity24.png' %}" title="로그아웃"></a>
-    {% else %}
-    <a href="{% url 'login' %}?next={% url 'show issues' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
-    {% endif %}&nbsp;
-    </td>
-</tr>
-</table>
+<div id="wrap">
+    <div id="header">
+        <div class="gnb">
+            <ul>
+                <li class="menuBadIssue"><a href="{% url 'show issues' %}">노룩뉴스</a></li>
+                <li class="menuBadIssue"><a href="{% url 'show good issues' nolook='look' %}">룩!뉴스</a></li>
+                <li class="menuBadIssue"><a href="{% url 'ranking' %}">랭킹</a></li>
+                <li class="menuBadIssue"><a href="{% url 'show giza' %}">기자지구</a></li>
+            </ul>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="util utilDuo">
+        <a href="{% url 'new giza' %}"><img src="{% static 'icons/add24.png' %}" title="기자 추가"></a> <a href="{% url 'login' %}"><img src="{% static 'icons/face24.png' %}" title="회원정보"></a>
+        {% else %}
+        <div class="util utilSolo">
+        <a href="{% url 'login' %}?next={% url 'show giza' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
+        {% endif %}
+        </div>
+    </div>
+
+<div id="contents">
+<h1>기자지구</h1>
+<div class="annotation">
+잘못된 정보 수정, 인물사진 변경 등은 로그인 후 수정하시거나 이메일로 요청해 주세요.
+</div>
+
 <div class="dbSearch">
     <select id="searchType">
         <option value="belongto">언론사</option>
@@ -85,10 +61,7 @@ function onKeyPress(e) {
         <option value="twitter">트위터</option>
         <option value="facebook">페이스북</option>
     </select> 
-    <input type="text" id="searchWord" class="searchWord width-200" maxlength="100" onkeypress="onKeyPress(event)"> <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search()"> <span class="gizashowall"><a href="{% url 'show all giza' %}">모두 보기</a></div>
-</div>
-<div class="annotation">
-잘못된 정보 수정, 인물사진 변경 등은 로그인 후 수정하시거나 이메일로 요청해 주세요.
+    <input type="text" id="searchWord" class="searchWord" maxlength="100" onkeypress="onKeyPress(event)"> <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search()"> <span class="gizashowall"><a href="{% url 'show all giza' %}">모두 보기</a>
 </div>
 
 {% if count %}
@@ -97,10 +70,10 @@ function onKeyPress(e) {
     <table class="gizadb">
     <tr>
         <td rowspan="3" class="gizaPortrait">{% if giza.portrait %}<img src="{{giza.portrait.url}}" width="120" height="160">{% else %}<img src="{% static 'images/nophoto.png' %}" width="120" height="160">{% endif %}</td>
-        <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}}) <font size="2">[ <a href="{% url 'search good issue' searchType='email' searchWord=giza.email nolook='all' %}">작성 기사</a> | <a href="{% url 'search good issue' searchType='belongto' searchWord=giza.belongto nolook='all' %}">언론사 기사</a> ]</font></td>
+        <td class="gizaName">{% if user.is_authenticated %}<a href="{% url 'edit giza' id=giza.id %}" title="기자 편집">{{giza.name}}</a>{% else %}{{giza.name}}{% endif %} ({{giza.email}}) <font size="2">[ <a href="{% url 'search good issue' searchType='email' searchWord=giza.email nolook='all' %}">작성 기사</a> | <a href="{% url 'search good issue' searchType='belongto' searchWord=giza.belongto nolook='all' %}">언론사 기사</a> ]</font></td>
     </tr>
     <tr>
-        <td class="gizaBelong"><a href="{% url 'search giza' searchType='belongto' searchWord=giza.belongto %}">{{giza.belongto}}</a>
+        <td class="gizaBelong"><a href="{% url 'search giza' searchType='belongto' searchWord=giza.belongto %}" title="소속 기자 보기">{{giza.belongto}}</a>
         {% if giza.twitter %}
         <a href="{{giza.twitter}}" target="_blank"><img src="{% static 'icons/twitter24.png' %}"></a>
         {% endif %}
@@ -118,12 +91,12 @@ function onKeyPress(e) {
     {% endif %}
 {% endfor %}
 </div>
-{% elif list %}
+{% elif lists %}
 <div align="center"><div class="hof">
     <p>명예의 전당</p>
-        {% for year, month in lists %}
-        <a href="{% url 'rank archive' year=year month=month nolook='nolook' %}">{{year}}년 {{month}}월</a><br>
-        {% endfor %}
+    {% for year, month in lists %}
+    <a href="{% url 'rank archive' year=year month=month nolook='nolook' %}">{{year}}년 {{month}}월</a><br>
+    {% endfor %}
     </select>
 </div></div>
 {% endif %}
@@ -142,6 +115,19 @@ function onKeyPress(e) {
 </script>
 </div>
 {% endif %}
-<div class="footer">
-<strike>게시판</strike> | <a href={{ABOUT_LINK}} target="_blank">노룩뉴스 </a> | 문의사항, 의견 보내기: <font color="black"><a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></font>
+
+</div> <!-- //Contents -->
+
+<div id="footer">
+    <div class="footerMenu">
+        <ul>
+            <li><strike>게시판</strike></li>
+            <li><a href={{ABOUT_LINK}} target="_blank">노룩뉴스 소개</a></li>
+            <li>테마 디자인 : {{THEME_DESIGNER}}</a></li>
+            <li>문의, 의견 보내기 : <a href="mailto:gencode.me@gmail.com">gencode.me@gmail.com</a></li>
+        </ul>
+    </div>
+</div>
+
+</div> <!-- //wrap -->
 {% endblock %}

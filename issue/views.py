@@ -74,7 +74,6 @@ def show_issues(request, nolook='nolook'):
     template = "hotissue.html"
     if is_mobile(request):
         template = "m-hotissue.html"
-    print template
 
     return render(
         request,
@@ -154,11 +153,17 @@ def new_issue(request, nolook='nolook'):
                     ip = get_ipaddress(request)
                     if ip not in claimusers:
                         updateArticle.claimusers += "," + ip
-                        updateArticle.count += 1
+                        if nolook == 'nolook':
+                            updateArticle.count += 1
+                        else:
+                            updateArticle.goodcount += 1
                     updateArticle.save()
                     return redirect(articleCheck.get_absolute_url(nolook))
             except ObjectDoesNotExist:
-                article.count = 1
+                if nolook == 'nolook':
+                    article.count = 1
+                else:
+                    article.goodcount = 1
                 article.claimusers = get_ipaddress(request)
                 article.save()
                 return redirect(article.get_absolute_url(nolook))

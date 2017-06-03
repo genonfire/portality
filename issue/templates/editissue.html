@@ -3,17 +3,6 @@
 {% block title %}이슈 편집{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-div.input_required {
-    padding: 4px; padding-left: 10px;
-    border: 1px solid #8298a6;
-    background-color: #8298a6;
-    color: white;
-    font-weight: bold;
-}
-</style>
-<script src="{% static 'js/jquery-3.1.1.min.js' %}" /></script>
 {% endblock %}
 {% block content %}
 <form
@@ -25,36 +14,24 @@ div.input_required {
     {{ form.non_field_errors }}
 
     {% if created_at %}
-    <p><font color="#48E">좋아요!: {{goodcount}}</font> <font color="#707070">나빠요!: {{count}}</font></p>
+    <p class="edit"><font color="#48E">좋아요!: {{goodcount}}</font> <font color="#707070">나빠요!: {{count}}</font></p>
     {% else %}
-    <p>{% if nolook == 'nolook' %}<font color="#707070">나쁜{% else %}<font color="#48E">좋은{% endif %} 뉴스를 추가합니다.</font></p>
+    <p class="edit">{% if nolook == 'nolook' %}<font color="#707070">나쁜{% else %}<font color="#48E">좋은{% endif %} 뉴스를 추가합니다.</font></p>
     {% endif %}
     <div class="input_required" id="input_required">
-    <p>기사 제목: {{form.subject}}</p>
-    <p>기사 주소: {{form.url}}</p>
+    <p class="edit">기사 제목: {{form.subject}}</p>
+    <p class="edit">기사 주소: {{form.url}}</p>
     </div>
     <br>
     <div class="input_optional">
-    <p>기자 이메일: {{form.email}}</p>
-    <p>아카이브 주소: {{form.archive}}<br>
+    <p class="edit">기자 이메일: {{form.email}}</p>
+    <p class="edit">아카이브 주소: {{form.archive}}<br>
      - archive.is 의 스냅샷 주소</p>
     {% if created_at %}
-    <p><font size="2">입력: {{created_at|date:"Y-m-d H:i:s"}}</font></p>
+    <p class="edit"><font size="2">입력: {{created_at|date:"Y-m-d H:i:s"}}</font></p>
     {% endif %}
     </div>
-    <script>
-    function checkType() {
-        var checkType = document.getElementById('id_nolook').checked;
-        if (checkType == true) {
-            $('#input_required').css('background-color', '#707070');
-        }
-        else {
-            $('#input_required').css('background-color', '#8298a6');
-        }
-    }
-    window.onload = checkType();
-    </script>
-    <p><input type="reset" style="border-color:blue"> <input type="submit"></p>
+    <p class="edit"><input type="reset" style="border-color:blue"> <input type="submit"></p>
 </form>
 <script>
 $('#issue_edit_form').submit(function(e) {

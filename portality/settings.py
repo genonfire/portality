@@ -229,3 +229,4 @@ GIZA_IMAGE_SIZE_LIMIT = 100 * 1024 # 기자 사진 사이즈 제한
 
 ABOUT_LINK = "http://todayhumor.com/?bestofbest_335548"
 LOGO_NAME = "/assets/images/nolooknews.png"
+THEME_DESIGNER = "haru"

@@ -2,7 +2,6 @@
 {% block title %}기자 편집{% endblock %}
 {% block extra_head_content %}
 {{ block.super }}
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 div.input_required {
     padding: 4px; padding-left: 10px;
@@ -24,22 +23,22 @@ div.input_required {
     {{ form.non_field_errors }}
 
     <div class="input_required">
-    <p>이름: {{form.name}}</p>
-    <p>소속: {{form.belongto}}</p>
-    <p>이메일: {{form.email}}</p>
+    <p class="edit">이름: {{form.name}}</p>
+    <p class="edit">소속: {{form.belongto}}</p>
+    <p class="edit">이메일: {{form.email}}</p>
     </div>
     <br>
     <div class="input_optional">
-    <p>트위터: {{form.twitter}}</p>
-    <p>페이스북: {{form.facebook}}</p>
-    <p>사진(120x160): {{form.portrait}}</p>
-    <p>약력: {{form.profile}}</p>
+    <p class="edit">트위터: {{form.twitter}}</p>
+    <p class="edit">페이스북: {{form.facebook}}</p>
+    <p class="edit">사진(120x160): {{form.portrait}}</p>
+    <p class="edit">약력: {{form.profile}}</p>
     </div>
     {% if edituser %}
-    <p>마지막으로 수정한 사람: {{edituser}}</p>
+    <p class="edit">마지막으로 수정한 사람: {{edituser}}</p>
     {% endif %}
 
-    <p><input type="reset" style="border-color:blue"> <input type = "submit"></p>
+    <p class="edit"><input type="reset" style="border-color:blue"> <input type = "submit"></p>
 </form>
 {% if user.is_superuser and edituser %}
 <script>
