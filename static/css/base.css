@@ -38,7 +38,7 @@ a:hover {color:yellow; color:#000;text-decoration:underline;}
 .utilSolo a img {margin-top:3px;}
 .utilDuo {width:60px;}
 .utilDuo a img {margin-bottom:3px;}
-.m-util {position:absolute;top:12%;right:.625em;margin-top:-15px;}
+.m-util {position:absolute;top:15%;right:.625em;margin-top:-15px;}
 .m-util a {height:30px;background:#11223d;line-height:0;text-align:center;}
 .m-util a:hover {background:#283850;}
 
