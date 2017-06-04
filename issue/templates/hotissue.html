@@ -7,7 +7,7 @@
 <script>
 function search(searchRange, nolook) {
     var type = document.getElementById('searchType').value;
-    var word = document.getElementById('searchWord').value;
+    var word = document.getElementById('searchWord').value.replace(/\s+$/, '');
     if (!word) {
         alert("검색어를 입력하세요.");
         return;

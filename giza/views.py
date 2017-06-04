@@ -73,20 +73,21 @@ def show_giza(request):
         })
 
 def search_giza(request, searchType, searchWord):
+    word = searchWord.rstrip()
     template = "showgiza.html"
     if is_mobile(request):
         template = "m-showgiza.html"
 
     if searchType == "name":
-        db = Giza.objects.filter(name__iexact=searchWord).order_by('belongto')
+        db = Giza.objects.filter(name__iexact=word).order_by('belongto')
     elif searchType == "email":
-        db = Giza.objects.filter(email__icontains=searchWord).order_by('belongto')
+        db = Giza.objects.filter(email__icontains=word).order_by('belongto')
     elif searchType == "belongto":
-        db = Giza.objects.filter(belongto__icontains=searchWord).order_by('belongto')
+        db = Giza.objects.filter(belongto__icontains=word).order_by('belongto')
     elif searchType == "twitter":
-        db = Giza.objects.filter(twitter__icontains=searchWord).order_by('belongto')
+        db = Giza.objects.filter(twitter__icontains=word).order_by('belongto')
     elif searchType == "facebook":
-        db = Giza.objects.filter(facebook__icontains=searchWord).order_by('belongto')
+        db = Giza.objects.filter(facebook__icontains=word).order_by('belongto')
     else:
         return render(
             request,
