@@ -87,6 +87,10 @@ div.hof a:hover {color:yellow;}
 .align-center {text-align: center;}
 .align-right {text-align: right;}
 
+div.about {display:inline-block;}
+.about img {max-width:100%;max-height:100%;}
+
+
 /* data table td style */
 div.issue hr , div.goodIssue hr , div.ranking hr , div.ranqueen hr , div.gizadb hr  {margin-bottom:1.0em;}
 table.issue, table.goodIssue, table.ranking, table.ranqueen, table.gizadb {width:100%;background:#fff;}
