@@ -180,8 +180,8 @@ HOTISSUE_LIMIT = 20 # 핫이슈 리스트 개수
 HOTISSUE_DATE_DELTA = 2 # 오늘의 이슈에 포함될 시간(일)
 
 # Setting for best
-BEST_LIST_LIMIT = 10 # 리스트 당 개수
-BEST_THRESHOLD = 10 # 베스트에 올라갈 기준
+BEST_LIST_LIMIT = 20 # 리스트 당 개수
+BEST_THRESHOLD = 50 # 베스트에 올라갈 기준
 
 # Setting for issue
 FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)
