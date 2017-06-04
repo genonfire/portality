@@ -175,9 +175,16 @@ RANKING_START_MONTH = 5
 RANKING_DATE_DELTA = 7 # 랭킹 계산에 포함될 시간(일)
 RANKING_LIST_LIMIT = 10 # 보여줄 순위
 
+# Setting for today
+HOTISSUE_LIMIT = 20 # 핫이슈 리스트 개수
+HOTISSUE_DATE_DELTA = 2 # 오늘의 이슈에 포함될 시간(일)
+
+# Setting for best
+BEST_LIST_LIMIT = 10 # 리스트 당 개수
+BEST_THRESHOLD = 10 # 베스트에 올라갈 기준
+
 # Setting for issue
 FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)
-HOTISSUE_LIMIT = 20 # 핫이슈 리스트 개수
 MEDIA_CHOICE = ( # 매체 종류
          ('조선일보', '조선일보'),
          ('중앙일보', '중앙일보'),

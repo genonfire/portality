@@ -43,12 +43,26 @@ def show_all_issues(request, nolook):
         }
     )
 
-@login_required
-def show_recent_issues(request, nolook):
+def show_issues(request, nolook='nolook'):
+    threshold = settings.BEST_THRESHOLD
+    limit = settings.BEST_LIST_LIMIT
+    nextPage = 0
+
     if nolook == 'nolook':
-        issues = Issue.objects.filter(count__gte=1).order_by('-datetime')[0:100]
+        total = Issue.objects.filter(count__gte=threshold).count()
     else:
-        issues = Issue.objects.filter(goodcount__gte=1).order_by('-datetime')[0:100]
+        total = Issue.objects.filter(goodcount__gte=threshold).count()
+
+    cut, reminder = divmod(total, limit)
+    if (reminder > 0):
+        cut += 1
+    if (cut > 1):
+        nextPage = 2
+
+    if nolook == 'nolook':
+        issues = Issue.objects.filter(count__gte=threshold).order_by('-datetime')[0:limit]
+    else:
+        issues = Issue.objects.filter(goodcount__gte=threshold).order_by('-datetime')[0:limit]
 
     template = "hotissue.html"
     if is_mobile(request):
@@ -60,12 +74,60 @@ def show_recent_issues(request, nolook):
         {
             'issues' : issues,
             'nolook' : nolook,
+            'index' : 1,
+            'total' : total,
+            'prevPage' : 0,
+            'nextPage' : nextPage,
+            'searchRange' : 'best',
         }
     )
 
-def show_issues(request, nolook='nolook'):
-    startdate = timezone.now() - timezone.timedelta(days=settings.FILTER_DATE_DELTA)
+def show_best_issues(request, page, nolook='nolook'):
+    threshold = settings.BEST_THRESHOLD
+    limit = settings.BEST_LIST_LIMIT
+    nextPage = 0
+    currentPage = int(page)
+    prevPage = currentPage - 1
+    startPage = prevPage * limit
+
+    if nolook == 'nolook':
+        total = Issue.objects.filter(count__gte=threshold).count()
+    else:
+        total = Issue.objects.filter(goodcount__gte=threshold).count()
+
+    cut, reminder = divmod(total, limit)
+    if (reminder > 0):
+        cut += 1
+    if (cut > currentPage):
+        nextPage = currentPage + 1
+
+    if nolook == 'nolook':
+        issues = Issue.objects.filter(count__gte=threshold).order_by('-datetime')[startPage:startPage+limit]
+    else:
+        issues = Issue.objects.filter(goodcount__gte=threshold).order_by('-datetime')[startPage:startPage+limit]
+
+    template = "hotissue.html"
+    if is_mobile(request):
+        template = "m-hotissue.html"
+
+    return render(
+        request,
+        template,
+        {
+            'issues' : issues,
+            'nolook' : nolook,
+            'index' : page,
+            'total' : total,
+            'prevPage' : prevPage,
+            'nextPage' : nextPage,
+            'searchRange' : 'best',
+        }
+    )
+
+def show_today_issues(request, nolook='nolook'):
+    startdate = timezone.now() - timezone.timedelta(days=settings.HOTISSUE_DATE_DELTA)
     enddate = timezone.now()
+
     if nolook == 'nolook':
         issues = Issue.objects.filter(count__gte=1).filter(datetime__range=(startdate, enddate)).order_by('-count')[0:settings.HOTISSUE_LIMIT]
     else:
@@ -81,48 +143,19 @@ def show_issues(request, nolook='nolook'):
         {
             'issues' : issues,
             'nolook' : nolook,
+            'today' : True,
+            'searchRange' : 'all',
         }
     )
 
-def search_issue(request, searchType, searchWord, nolook='nolook'):
-    issues = nolookissues = lookissues = None
+def show_today_all(request, nolook='nolook'):
+    startdate = timezone.now() - timezone.timedelta(days=settings.HOTISSUE_DATE_DELTA)
+    enddate = timezone.now()
 
-    if nolook == 'nolook' or nolook == 'all':
-        if searchType == "subject":
-            nolookissues = Issue.objects.filter(count__gte=1).filter(subject__icontains=searchWord).order_by('-count', '-datetime')
-        elif searchType == "url":
-            nolookissues = Issue.objects.filter(count__gte=1).filter(url__iexact=searchWord).order_by('-count', '-datetime')
-        elif searchType == "email":
-            nolookissues = Issue.objects.filter(count__gte=1).filter(email__icontains=searchWord).order_by('-count', '-datetime')
-        elif searchType == "name":
-            giza = Giza.objects.filter(name__iexact=searchWord)
-            if giza.exists():
-                emails = giza.values_list('email', flat=True)
-                nolookissues = Issue.objects.filter(count__gte=1).filter(email__in=emails)
-        elif searchType == "belongto":
-            giza = Giza.objects.filter(belongto__icontains=searchWord)
-            if giza.exists():
-                emails = giza.values_list('email', flat=True)
-                nolookissues = Issue.objects.filter(count__gte=1).filter(email__in=emails)
-        issues = nolookissues
-    if nolook == 'look' or nolook == 'all':
-        if searchType == "subject":
-            lookissues = Issue.objects.filter(goodcount__gte=1).filter(subject__icontains=searchWord).order_by('-goodcount', '-datetime')
-        elif searchType == "url":
-            lookissues = Issue.objects.filter(goodcount__gte=1).filter(url__iexact=searchWord).order_by('-goodcount', '-datetime')
-        elif searchType == "email":
-            lookissues = Issue.objects.filter(goodcount__gte=1).filter(email__icontains=searchWord).order_by('-goodcount', '-datetime')
-        elif searchType == "name":
-            giza = Giza.objects.filter(name__iexact=searchWord)
-            if giza.exists():
-                emails = giza.values_list('email', flat=True)
-                lookissues = Issue.objects.filter(goodcount__gte=1).filter(email__in=emails)
-        elif searchType == "belongto":
-            giza = Giza.objects.filter(belongto__icontains=searchWord)
-            if giza.exists():
-                emails = giza.values_list('email', flat=True)
-                lookissues = Issue.objects.filter(goodcount__gte=1).filter(email__in=emails)
-        issues = lookissues
+    if nolook == 'nolook':
+        issues = Issue.objects.filter(count__gte=1).filter(datetime__range=(startdate, enddate)).order_by('-datetime')
+    else:
+        issues = Issue.objects.filter(goodcount__gte=1).filter(datetime__range=(startdate, enddate)).order_by('-datetime')
 
     template = "hotissue.html"
     if is_mobile(request):
@@ -132,10 +165,77 @@ def search_issue(request, searchType, searchWord, nolook='nolook'):
         request,
         template,
         {
+            'issues' : issues,
+            'nolook' : nolook,
+            'today' : True,
+            'searchRange' : 'all',
+        }
+    )
+
+def search_issue(request, searchRange, searchType, searchWord, nolook='nolook'):
+    issues = nolookissues = lookissues = None
+    threshold = 1
+    issueCount = 0
+    today = True
+    if searchRange == 'best':
+        threshold = settings.BEST_THRESHOLD
+        today = False
+
+    if nolook == 'nolook' or nolook == 'all':
+        if searchType == "subject":
+            nolookissues = Issue.objects.filter(count__gte=threshold).filter(subject__icontains=searchWord).order_by('-count', '-datetime')
+        elif searchType == "url":
+            nolookissues = Issue.objects.filter(count__gte=threshold).filter(url__iexact=searchWord).order_by('-count', '-datetime')
+        elif searchType == "email":
+            nolookissues = Issue.objects.filter(count__gte=threshold).filter(email__icontains=searchWord).order_by('-count', '-datetime')
+        elif searchType == "name":
+            giza = Giza.objects.filter(name__iexact=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                nolookissues = Issue.objects.filter(count__gte=threshold).filter(email__in=emails)
+        elif searchType == "belongto":
+            giza = Giza.objects.filter(belongto__icontains=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                nolookissues = Issue.objects.filter(count__gte=threshold).filter(email__in=emails)
+        issues = nolookissues
+    if nolook == 'look' or nolook == 'all':
+        if searchType == "subject":
+            lookissues = Issue.objects.filter(goodcount__gte=threshold).filter(subject__icontains=searchWord).order_by('-goodcount', '-datetime')
+        elif searchType == "url":
+            lookissues = Issue.objects.filter(goodcount__gte=threshold).filter(url__iexact=searchWord).order_by('-goodcount', '-datetime')
+        elif searchType == "email":
+            lookissues = Issue.objects.filter(goodcount__gte=threshold).filter(email__icontains=searchWord).order_by('-goodcount', '-datetime')
+        elif searchType == "name":
+            giza = Giza.objects.filter(name__iexact=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                lookissues = Issue.objects.filter(goodcount__gte=threshold).filter(email__in=emails)
+        elif searchType == "belongto":
+            giza = Giza.objects.filter(belongto__icontains=searchWord)
+            if giza.exists():
+                emails = giza.values_list('email', flat=True)
+                lookissues = Issue.objects.filter(goodcount__gte=threshold).filter(email__in=emails)
+        issues = lookissues
+
+    template = "hotissue.html"
+    if is_mobile(request):
+        template = "m-hotissue.html"
+
+    if issues:
+        issueCount = issues.count()
+
+    return render(
+        request,
+        template,
+        {
             'nolookissues' : nolookissues,
             'lookissues' : lookissues,
             'issues' : issues,
             'nolook' : nolook,
+            'searchRange' : searchRange,
+            'total' : issueCount,
+            'today' : today,
         }
     )
 

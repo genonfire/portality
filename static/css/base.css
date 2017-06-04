@@ -83,6 +83,9 @@ p.edit {padding:2px;padding-top:10px;padding-bottom:10px;}
 div.hof {margin-bottom:10px;width:160px;text-align:center;background-color:#283850;color:#D8D8D8;box-shadow:0 0 5px 5px #888;}
 div.hof a {color:white;}
 div.hof a:hover {color:yellow;}
+.padding-top-10 {padding-top: 10px;}
+.align-center {text-align: center;}
+.align-right {text-align: right;}
 
 /* data table td style */
 div.issue hr , div.goodIssue hr , div.ranking hr , div.ranqueen hr , div.gizadb hr  {margin-bottom:1.0em;}
