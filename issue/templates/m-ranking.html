@@ -24,7 +24,7 @@
     <a href="{% url 'login' %}"><img src="{% static 'icons/face24.png' %}" title="회원정보"></a>
     {% else %}
     <div class="m-util utilSolo">
-    <a href="{% url 'login' %}?next={% url 'show issues' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
+    <a href="{% url 'login' %}?next={% url 'ranking' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
     {% endif %}
     </div>
 

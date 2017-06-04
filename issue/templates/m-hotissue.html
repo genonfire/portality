@@ -47,12 +47,12 @@ function onKeyPress(e, searchRange, nolook) {
 {% else %}
 <h1>노룩 베스트</h1>
 {% endif %}
-{% if user.is_authenticated %}
+{% if user.is_authenticated and nolook != 'all' and today == True %}
 <div class="m-util utilDuo">
-{% if nolook != 'all' %}<a href="{% url 'new issue' nolook=nolook %}"><img src="{% static 'icons/add24.png' %}" title="이슈 생성"></a> {% endif %}<a href="{% url 'login' %}"><img src="{% static 'icons/face24.png' %}" title="회원정보"></a>
+<a href="{% url 'new issue' nolook=nolook %}"><img src="{% static 'icons/add24.png' %}" title="이슈 생성"></a> <a href="{% url 'login' %}"><img src="{% static 'icons/face24.png' %}" title="회원정보"></a>
 {% else %}
 <div class="m-util utilSolo">
-<a href="{% url 'login' %}?next={% url 'show issues' %}"><img src="{% static 'icons/identity24.png' %}" title="로그인"></a>
+<a href="{% url 'login' %}">{% if user.is_authenticated %}<img src="{% static 'icons/face24.png' %}" title="회원정보">{% else %}<img src="{% static 'icons/identity24.png' %}" title="로그인">{% endif %}</a>
 {% endif %}
 </div>
 
