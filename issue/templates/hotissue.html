@@ -70,7 +70,7 @@ function onKeyPress(e, searchRange, nolook) {
 
 {% if nolook == 'all' %}
 <div class="annotation">
-'나빠요!'를 받은 기사
+<font color="#e02d31">'나빠요!'</font>를 받은 기사
 </div>
 <div class="issue">
 {% for issue in nolookissues %}
@@ -93,7 +93,7 @@ function onKeyPress(e, searchRange, nolook) {
 </div>
 <div class="goodIssue">
 <div class="annotation">
-'좋아요!'를 받은 기사
+<font color="#1e88e5">'좋아요!'</font>를 받은 기사
 </div>
 {% for issue in lookissues %}
     <table class="goodIssue">
