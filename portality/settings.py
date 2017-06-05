@@ -181,7 +181,7 @@ HOTISSUE_DATE_DELTA = 2 # 오늘의 이슈에 포함될 시간(일)
 
 # Setting for best
 BEST_LIST_LIMIT = 20 # 리스트 당 개수
-BEST_THRESHOLD = 50 # 베스트에 올라갈 기준
+BEST_THRESHOLD = 20 # 베스트에 올라갈 기준
 
 # Setting for issue
 FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)
@@ -234,6 +234,6 @@ MEDIA_CHOICE = ( # 매체 종류
     )
 GIZA_IMAGE_SIZE_LIMIT = 100 * 1024 # 기자 사진 사이즈 제한
 
-ABOUT_LINK = "/assets/html/howto.html"
+ABOUT_LINK = "/assets/html/howto_newissue.html"
 LOGO_NAME = "/assets/images/nolooknews.png"
 THEME_DESIGNER = "haru"
