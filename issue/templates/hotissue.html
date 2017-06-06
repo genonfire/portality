@@ -83,7 +83,7 @@ function onKeyPress(e, searchRange, nolook) {
         {% endif %}
     </tr>
     <tr>
-        <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}" title="기자 정보">{{issue.email}}</a> (나빠요! {{issue.count}}번) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
+        <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}" title="기자 정보">{{issue.email}}</a> (나빠요! <font color="#e02d31">{{issue.count}}</font>) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
     </tr>
     </table>
     {% if not forloop.last %}
@@ -105,7 +105,7 @@ function onKeyPress(e, searchRange, nolook) {
         {% endif %}
     </tr>
     <tr>
-        <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}" title="기자 정보">{{issue.email}}</a> (좋아요! {{issue.goodcount}}번) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
+        <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}" title="기자 정보">{{issue.email}}</a> (좋아요! <font color="#e02d31">{{issue.goodcount}}</font>) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
     </tr>
     </table>
     {% if not forloop.last %}
@@ -135,7 +135,7 @@ function onKeyPress(e, searchRange, nolook) {
         {% endif %}
     </tr>
     <tr>
-        <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}" title="기자 정보">{{issue.email}}</a> ({% if nolook == 'nolook' %}나빠요! {{issue.count}}{% else %}좋아요! {{issue.goodcount}}{% endif %}번) <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
+        <td class="issueDown"><a href="{% url 'search giza' searchType='email' searchWord=issue.email %}" title="기자 정보">{{issue.email}}</a> ({% if nolook == 'nolook' %}나빠요! <font color="#e02d31">{{issue.count}}</font>{% else %}좋아요! <font color="#e02d31">{{issue.goodcount}}</font>{% endif %}) {{issue.datetime|date:" Y-m-d H:i:s"}} <span class="thumb"><a href="{% url 'thumb down' id=issue.id %}"><img src="{% static 'icons/thumb_down14.png' %}" title="나빠요!"></a> <a href="{% url 'thumb up' id=issue.id %}"><img src="{% static 'icons/thumb_up14.png' %}" title="좋아요!"></a></span></td>
     </tr>
     </table>
     {% if not forloop.last %}
