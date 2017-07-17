@@ -1,7 +1,7 @@
-# portality
-기레기 감시 시스템
+# project portality
+노룩뉴스
 
-데모: http://portal.gencode.me/
+데모: http://nolooknews.com/
 
 크롬 확장 프로그램(Companion App): https://chrome.google.com/webstore/detail/버스터-콜/ifjkccnofiiagbkehbpapffgjlfhbehm
 
