@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Django settings for portality project.
 
@@ -12,12 +12,16 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-import json
 from collections import namedtuple
+import json
+import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Theme
+THEME = 'haru'
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+THEME_DIR = os.path.join(BASE_DIR, 'templates', THEME)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -25,32 +29,41 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-if (os.environ.has_key('DJANGO_DEBUG')):
+if 'DJANGO_DEBUG' in os.environ:
     if (os.environ['DJANGO_DEBUG'] == 'Debug'):
         DEBUG = True
 
-ALLOWED_HOSTS = ['nolooknews.com', 'gencode.me', 'localhost',]
+ALLOWED_HOSTS = ['nolooknews.com', 'gencode.me', 'localhost']
 
 
 # Application definition
 
-INSTALLED_APPS = (
+DJANGO_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-#    'django.contrib.sites',
+)
+THIRD_PARTY_APPS = (
+    'rest_framework',
+    'graphos',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.naver',
+)
+EDITOR_APPS = (
+)
+LOCAL_APPS = (
+    'core',
     'giza',
     'issue',
-    'rest_framework',
-#    'allauth',
-#    'allauth.account',
-#    'allauth.socialaccount',
-#    'allauth.socialaccount.providers.naver',
+    'accounts',
 )
-#SITE_ID = 1
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + EDITOR_APPS + LOCAL_APPS
+# SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -68,18 +81,24 @@ ROOT_URLCONF = 'portality.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
-        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(THEME_DIR),
+            os.path.join(TEMPLATES_DIR),
+        ],
         'OPTIONS': {
+            'debug': DEBUG,
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'issue.context_processors.global_settings',
-#                'django.template.context_processors.request',
+                'core.context_processors.global_settings',
+                # 'django.template.context_processors.request',
             ],
-            'debug': DEBUG,
         },
     },
 ]
@@ -101,7 +120,7 @@ try:
     DEFAUL_FROM_EMAIL = getattr(secrets, "DEFAUL_FROM_EMAIL")
     SERVER_EMAIL = getattr(secrets, "SERVER_EMAIL")
 except IOError:
-    SECRET_KEY = 'k8n13h0y@$=v$uxg*^brlv9$#hm8w7nye6km!shc*&bkgkcd*p' # test key
+    SECRET_KEY = 'k8n13h0y@$=v$uxg*^brlv9$#hm8w7nye6km!shc*&bkgkcd*p'
     DB_NAME = ''
     DB_USER = ''
     DB_PASSWORD = ''
@@ -118,12 +137,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': DB_NAME,
-         'USER': DB_USER,
-         'PASSWORD': DB_PASSWORD,
-         'HOST': 'localhost',
-         'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -137,14 +156,14 @@ REST_FRAMEWORK = {
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-#    'allauth.account.auth_backends.AuthenticationBackend'
+    # 'allauth.account.auth_backends.AuthenticationBackend'
 )
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-KR'
 
 TIME_ZONE = 'Asia/Seoul'
 
@@ -172,68 +191,101 @@ LOGIN_REDIRECT_URL = 'login'
 # Setting for ranking
 RANKING_START_YEAR = 2017
 RANKING_START_MONTH = 5
-RANKING_DATE_DELTA = 7 # 랭킹 계산에 포함될 시간(일)
-RANKING_LIST_LIMIT = 10 # 보여줄 순위
+RANKING_DATE_DELTA = 7  # 랭킹 계산에 포함될 시간(일)
+RANKING_LIST_LIMIT = 10  # 보여줄 순위
 
 # Setting for today
-HOTISSUE_LIMIT = 20 # 핫이슈 리스트 개수
-HOTISSUE_DATE_DELTA = 2 # 오늘의 이슈에 포함될 시간(일)
+HOTISSUE_LIMIT = 20  # 핫이슈 리스트 개수
+HOTISSUE_DATE_DELTA = 7  # 최근 뉴스에 포함될 시간(일)
+
+# SEtting for Burst Call
+POINT_MAX = 50  # point max
+BURST_CALL_MIN_POINT = 10  # 버스터콜에 필요한 최소 포인트
+BURST_CALL_ACOM = 1  # acom for burster call
 
 # Setting for best
-BEST_LIST_LIMIT = 20 # 리스트 당 개수
-BEST_THRESHOLD = 20 # 베스트에 올라갈 기준
+BEST_LIST_LIMIT = 20  # 리스트 당 개수
+BEST_THRESHOLD = 20  # 베스트에 올라갈 기준
 
 # Setting for issue
-FILTER_DATE_DELTA = 7 # 핫이슈에 개제될 시간(일)
-MEDIA_CHOICE = ( # 매체 종류
-         ('조선일보', '조선일보'),
-         ('중앙일보', '중앙일보'),
-         ('동아일보', '동아일보'),
-         ('한겨레', '한겨레'),
-         ('경향신문', '경향신문'),
-         ('오마이뉴스', '오마이뉴스'),
-         ('미디어오늘', '미디어오늘'),
-         ('KBS', 'KBS'),
-         ('MBC', 'MBC'),
-         ('SBS', 'SBS'),
-         ('TV조선', 'TV조선'),
-         ('채널A', '채널A'),
-         ('JTBC', 'JTBC'),
-         ('MBN', 'MBN'),
-         ('YTN', 'YTN'),
-         ('연합뉴스', '연합뉴스'),
-         ('뉴시스', '뉴시스'),
-         ('뉴스1', '뉴스1'),
-         ('국민일보', '국민일보'),
-         ('노컷뉴스', '노컷뉴스'),
-         ('뉴데일리', '뉴데일리'),
-         ('뉴스타파', '뉴스타파'),
-         ('뉴스토마토', '뉴스토마토'),
-         ('뉴스핌', '뉴스핌'),
-         ('데일리안', '데일리안'),
-         ('마이데일리', '마이데일리'),
-         ('매일경제', '매일경제'),
-         ('머니투데이', '머니투데이'),
-         ('문화일보', '문화일보'),
-         ('민중의소리', '민중의소리'),
-         ('서울신문', '서울신문'),
-         ('서울경제', '서울경제'),
-         ('세계일보', '세계일보'),
-         ('시사iN', '시사iN'),
-         ('시사저널', '시사저널'),
-         ('아시아경제', '아시아경제'),
-         ('여성신문', '여성신문'),
-         ('위키트리', '위키트리'),
-         ('이데일리', '이데일리'),
-         ('조세일보', '조세일보'),
-         ('쿠키뉴스', '쿠키뉴스'),
-         ('프레시안', '프레시안'),
-         ('한국경제', '한국경제'),
-         ('한국일보', '한국일보'),
-         ('헤럴드경제', '헤럴드경제'),
-    )
-GIZA_IMAGE_SIZE_LIMIT = 100 * 1024 # 기자 사진 사이즈 제한
+FILTER_DATE_DELTA = 7  # 핫이슈에 개제될 시간(일)
+MEDIA_CHOICE = (  # 매체 종류
+    ('조선일보', '조선일보'),
+    ('중앙일보', '중앙일보'),
+    ('동아일보', '동아일보'),
+    ('한겨레', '한겨레'),
+    ('경향신문', '경향신문'),
+    ('오마이뉴스', '오마이뉴스'),
+    ('미디어오늘', '미디어오늘'),
+    ('KBS', 'KBS'),
+    ('MBC', 'MBC'),
+    ('SBS', 'SBS'),
+    ('TV조선', 'TV조선'),
+    ('채널A', '채널A'),
+    ('JTBC', 'JTBC'),
+    ('MBN', 'MBN'),
+    ('YTN', 'YTN'),
+    ('연합뉴스', '연합뉴스'),
+    ('뉴시스', '뉴시스'),
+    ('뉴스1', '뉴스1'),
+    ('국민일보', '국민일보'),
+    ('국제신문', '국제신문'),
+    ('CBS노컷뉴스', 'CBS노컷뉴스'),
+    ('NewBC', 'NewBC'),
+    ('뉴데일리', '뉴데일리'),
+    ('뉴스타파', '뉴스타파'),
+    ('뉴스토마토', '뉴스토마토'),
+    ('뉴스핌', '뉴스핌'),
+    ('더팩트', '더팩트'),
+    ('데일리안', '데일리안'),
+    ('디지털데일리', '디지털데일리'),
+    ('디지털타임스', '디지털타임스'),
+    ('마이데일리', '마이데일리'),
+    ('매일경제', '매일경제'),
+    ('머니투데이', '머니투데이'),
+    ('문화일보', '문화일보'),
+    ('문화저널21', '문화저널21'),
+    ('미디어스', '미디어스'),
+    ('민중의소리', '민중의소리'),
+    ('서울신문', '서울신문'),
+    ('서울경제', '서울경제'),
+    ('세계일보', '세계일보'),
+    ('시사iN', '시사iN'),
+    ('시사저널', '시사저널'),
+    ('아시아경제', '아시아경제'),
+    ('아시아투데이', '아시아투데이'),
+    ('아이뉴스', '아이뉴스'),
+    ('에너지경제신문', '에너지경제신문'),
+    ('여성신문', '여성신문'),
+    ('위키트리', '위키트리'),
+    ('이데일리', '이데일리'),
+    ('전자신문', '전자신문'),
+    ('조세일보', '조세일보'),
+    ('ZDNet', 'ZDNet'),
+    ('쿠키뉴스', '쿠키뉴스'),
+    ('파이낸셜뉴스', '파이낸셜뉴스'),
+    ('프레시안', '프레시안'),
+    ('한국경제', '한국경제'),
+    ('한국일보', '한국일보'),
+    ('헤럴드경제', '헤럴드경제'),
+    ('기자협회보', '기자협회보'),
+    ('기타', '기타'),
+)
+GIZA_IMAGE_SIZE_LIMIT = 100 * 1024  # 기자 사진 사이즈 제한
 
 ABOUT_LINK = "/assets/html/howto_newissue.html"
 LOGO_NAME = "/assets/images/nolooknews.png"
-THEME_DESIGNER = "haru"
+NEWBC_LINK = "http://newbc.kr/bbs/board.php?bo_table=nolook"
+NEWBC_IMG = "/assets/images/newbc.png"
+NEWBC_IMG_SMALL = "/assets/images/newbc-small.png"
+
+# Admin information
+ADMIN_EMAIL = 'gencode.me@gmail.com'
+ADMIN_TWITTER = 'https://twitter.com/nolooknews'
+
+FOOTER_TAGS = '<li><a href="%s">노룩뉴스 소개</a></li>\
+<li>테마 : %s</li>\
+<li>문의, 의견 보내기</li>\
+<li><a href="mailto:%s"><img src="/assets/icons/email24.png"></a></li>\
+<li><a href="%s"><img src="/assets/icons/twitter24.png" target="_blank"></a></li>'\
+% (ABOUT_LINK, THEME, ADMIN_EMAIL, ADMIN_TWITTER)

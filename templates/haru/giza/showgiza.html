@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}노룩뉴스 - 기자 DB{% endblock %}
+{% block extra_head_content %}
+{{ block.super }}
+<script src="{% static 'js/jquery-3.1.1.min.js' %}" /></script>
+<script>
+function search() {
+    var type = document.getElementById('searchType').value;
+    var word = document.getElementById('searchWord').value;
+    if (!word) {
+        alert("검색어를 입력하세요.");
+        return;
+    }
+    var url = "{% url 'giza:search giza' search_type='type' search_word='word' %}".replace(/type/, type).replace(/word/, word).replace(/http:\/\//, '').replace(/https:\/\//, '').replace(/twitter.com\//, '').replace(/facebook.com\//, '');
+    if (url.substr(-1) == '/') {
+        url = url.slice(0, -1);
+    }
+    location.href = url;
+}
+
+function onKeyPress(e) {
+    if (e.keyCode == 13) {
+        e.preventDefault();
+        search();
+    }
+}
+
+function onLoad() {
+    var iframe = document.getElementsByTagName('iframe');
+    if (iframe.length > 0)
+        $('#gense').hide();
+    else
+        $('#gense').show();
+
+    var search_type = '{{ search_type }}';
+    if (search_type && search_type != '') {
+        document.getElementById('searchType').value = search_type;
+    }
+}
+window.onload = onLoad;
+</script>
+{% endblock %}
+{% block content %}
+<div id="wrap">
+    <div id="header">
+        <div class="gnb">
+            <ul>
+                <li><a href="{% url 'show news' %}">노룩뉴스</a></li>
+                <li><a href="{% url 'show issues' %}">베스트</a></li>
+                <li><a href="{% url 'ranking default' %}">랭킹</a></li>
+                <li><a href="{% url 'chart' %}">차트</a></li>
+                <li><a href="{% url 'giza:show giza' %}">기자 DB</a></li>
+            </ul>
+        </div>
+    </div>
+
+<div id="contents">
+    <div class="contents_header">
+        <h1>기자 DB</h1>
+        <div class="float-right">
+            {% if user.is_authenticated %}
+                <span>
+                    {% if email %}
+                    <a href="{% url 'giza:new giza with email' email=email %}">
+                        <img src="{% static 'icons/add24.png' %}" title="{{ email }} 추가" class="header_icon">
+                    </a>
+                    {% else %}
+                    <a href="{% url 'giza:new giza' %}">
+                        <img src="{% static 'icons/add24.png' %}" title="기자 추가" class="header_icon">
+                    </a>
+                    {% endif %}
+                </span>
+            {% endif %}
+            <span>
+                <a href="{% url 'login' %}?next={% url 'giza:show giza' %}">
+                    {% if user.is_authenticated %}
+                        <img src="{% static 'icons/face24.png' %}" title="회원정보" class="header_icon">
+                    {% else %}
+                        <img src="{% static 'icons/identity24.png' %}" title="로그인 및 회원가입" class="header_icon">
+                    {% endif %}
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="annotation">
+    잘못된 정보 수정, 인물사진 변경 등은 로그인 후 수정하시거나 이메일로 요청해 주세요.
+    </div>
+
+    <div class="dbSearch">
+        <select id="searchType">
+            <option value="belongto">언론사</option>
+            <option value="name">이름</option>
+            <option value="email">이메일</option>
+            <option value="twitter">트위터</option>
+            <option value="facebook">페이스북</option>
+        </select> 
+        <input type="text" id="searchWord" class="searchWord" maxlength="100" onkeypress="onKeyPress(event)"> <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search()">
+    </div>
+
+    {% if count %}
+        <div class="gizadb">
+            {% for giza in db %}
+                <table class="gizadb">
+                <tr>
+                    <td rowspan="3" class="gizaPortrait">
+                        {% if giza.portrait %}
+                            <img src="{{giza.portrait.url}}" width="120" height="160">
+                        {% else %}
+                            <img src="{% static 'images/nophoto.png' %}" width="120" height="160">
+                        {% endif %}
+                    </td>
+                    <td class="gizaName">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'giza:edit giza' id=giza.id %}" title="기자 편집">
+                                {{giza.name}}
+                            </a>
+                        {% else %}
+                            {{giza.name}}
+                        {% endif %}
+                        <span>
+                            <a href="{% url 'search issue' search_range='all' search_type='email' search_word=giza.email nolook='all' %}">
+                            작성기사
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gizaBelong">
+                        <a href="{% url 'giza:search giza' search_type='belongto' search_word=giza.belongto %}">
+                            {{giza.belongto}}
+                        </a>
+                        <span>
+                            <a href="{% url 'search issue' search_range='all' search_type='belongto' search_word=giza.belongto nolook='all' %}">
+                            언론사기사
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gizaEmail">
+                        {{giza.email}}
+                        {% if giza.twitter %}
+                            <a href="{{giza.twitter}}" target="_blank">
+                                <img src="{% static 'icons/twitter24.png' %}">
+                            </a>
+                        {% endif %}
+                        {% if giza.facebook %}
+                            <a href="{{giza.facebook}}" target="_blank">
+                                <img src="{% static 'icons/facebook24.png' %}">
+                            </a>
+                        {% endif %}
+                        <div class="giza_profile">
+                            {{ giza.profile|linebreaksbr }}
+                        </div>
+                    </td>
+                </tr>
+                </table>
+                {% if not forloop.last %}
+                    <hr>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% elif lists %}
+    <div align="center"><div class="hof">
+        <p>명예의 전당</p>
+        {% for year, month in lists %}
+            <div>
+                {{year}}년 {{month}}월
+                <span>
+                    <a href="{% url 'rank archive' year=year month=month nolook='nolook' %}">기자</a>
+                </span>
+                <span>
+                    <a href="{% url 'chart archive' year=year month=month %}">언론사</a>
+                </span>
+            </div>
+        {% endfor %}
+        </select>
+    </div></div>
+    {% endif %}
+
+    {% if not DEBUG %}
+    <div class="sense">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- nolooknews-bottom -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-6024742495031342"
+         data-ad-slot="8980979712"
+         data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    </div>
+    {% endif %}
+    <div id="gense" class="gense">
+    <a href={{NEWBC_LINK}} target="_blank"><img src={{NEWBC_IMG}}></a>
+    </div>
+
+</div> <!-- //Contents -->
+
+<div id="footer">
+    <div class="footerMenu">
+        <ul>
+            {{ FOOTER_TAGS|safe }}
+        </ul>
+    </div>
+</div>
+
+</div> <!-- //wrap -->
+{% endblock %}

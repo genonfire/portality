@@ -16,4 +16,4 @@ class Issue(models.Model):
     claimusers = models.TextField(default='', blank=True)
 
     def get_absolute_url(self, nolook='nolook'):
-        return reverse_lazy('show good issues', kwargs={'nolook': nolook})
+        return reverse_lazy('show news')

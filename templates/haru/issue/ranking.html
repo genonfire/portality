@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}노룩뉴스 - 랭킹{% endblock %}
+{% block extra_head_content %}
+{{ block.super }}
+<script src="{% static 'js/jquery-3.1.1.min.js' %}" /></script>
+<script>
+function onLoad() {
+    var iframe = document.getElementsByTagName('iframe');
+    if (iframe.length > 0)
+        $('#gense').hide();
+    else
+        $('#gense').show();
+}
+window.onload = onLoad;
+</script>
+{% endblock %}
+{% block content %}
+<div id="wrap">
+    <div id="header">
+        <div class="gnb">
+            <ul>
+                <li><a href="{% url 'show news' %}">노룩뉴스</a></li>
+                <li><a href="{% url 'show issues' %}">베스트</a></li>
+                <li><a href="{% url 'ranking default' %}">랭킹</a></li>
+                <li><a href="{% url 'chart' %}">차트</a></li>
+                <li><a href="{% url 'giza:show giza' %}">기자 DB</a></li>
+            </ul>
+        </div>
+    </div>
+
+<div id="contents">
+    <div class="contents_header">
+        <div class="contents_title">
+            <span class="contents_title_ranking">
+                노룩 랭킹
+            </span>
+            <span>
+                <a href="{% url 'rank all' nolook='nolook' ranktype='all' %}">
+                    <img src="{% static 'icons/throne28.png' %}">
+                </a>
+            </span>
+        </div>
+        <div class="float-right">
+            <span>
+                <a href="{% url 'login' %}">
+                    {% if user.is_authenticated %}
+                        <img src="{% static 'icons/face24.png' %}" title="회원정보" class="header_icon">
+                    {% else %}
+                        <img src="{% static 'icons/identity24.png' %}" title="로그인 및 회원가입" class="header_icon">
+                    {% endif %}
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="annotation">
+        {% if msg %}
+            {{ msg }}
+        {% else %}
+            {% if nolook == 'nolook' %}
+                일주일간 <font color="#e02d31">'나빠요!'</font>를 많이 받은 기자들의 순위입니다.
+                <span>
+                    <a href="{% url 'ranking' nolook='look' %}">
+                        좋아요! 보기
+                    </a>
+                </span>
+            {% else %}
+                일주일간 <font color="#1e88e5">'좋아요!'</font>를 많이 받은 기자들의 순위입니다.
+                <span>
+                    <a href="{% url 'ranking' nolook='nolook' %}">
+                        나빠요! 보기
+                    </a>
+                </span>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="ranking">
+    {% for giza, count in lists %}
+        <table class="ranking">
+            <tr>
+                <td rowspan="3" class="rankNo">
+                    {{forloop.counter}}
+                </td>
+                <td rowspan="3" class="rankCount">
+                    {{count}}<br><font size="1">받음</font>
+                </td>
+                <td rowspan="3" class="gizaPortrait">
+                    {% if giza.portrait %}
+                        <img src="{{giza.portrait.url}}" width="120" height="160">
+                    {% else %}
+                        <img src="{% static 'images/nophoto.png' %}" width="120" height="160">
+                    {% endif %}
+                </td>
+                <td class="gizaName">
+                    <a href="{% url 'giza:search giza' search_type='email' search_word=giza.email %}">
+                        {{giza.name}}
+                    </a>
+                    <span>
+                        <a href="{% url 'search issue' search_range='all' search_type='email' search_word=giza.email nolook='all' %}">
+                        작성기사
+                        </a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gizaBelong">
+                    {{giza.belongto}}
+                    <span>
+                        <a href="{% url 'search issue' search_range='all' search_type='belongto' search_word=giza.belongto nolook='all' %}">
+                        언론사기사
+                        </a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gizaEmail">
+                    {{giza.email}}
+                    {% if giza.twitter %}
+                        <a href="{{giza.twitter}}" target="_blank">
+                            <img src="{% static 'icons/twitter24.png' %}">
+                        </a>
+                    {% endif %}
+                    {% if giza.facebook %}
+                        <a href="{{giza.facebook}}" target="_blank">
+                            <img src="{% static 'icons/facebook24.png' %}">
+                        </a>
+                    {% endif %}
+                    <div class="rank_profile">
+                        {{ giza.profile|linebreaksbr }}
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+        {% if not forloop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+    </div>
+
+    {% if not DEBUG %}
+    <div class="sense">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- nolooknews-bottom -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-6024742495031342"
+         data-ad-slot="8980979712"
+         data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    </div>
+    {% endif %}
+    <div id="gense" class="gense">
+    <a href={{NEWBC_LINK}} target="_blank"><img src={{NEWBC_IMG}}></a>
+    </div>
+
+</div> <!-- //Contents -->
+
+<div id="footer">
+    <div class="footerMenu">
+        <ul>
+            {{ FOOTER_TAGS|safe }}
+        </ul>
+    </div>
+</div>
+
+</div> <!-- //wrap -->
+{% endblock %}

@@ -12,44 +12,56 @@ Class-based views
 Including another URLconf
     1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import include, url
 from django.conf import settings
+from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from issue import views
 
 urlpatterns = [
+    url(r'^', include('django.contrib.auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
-#    url(r'^accounts/', include('allauth.urls')),
-    url(r'^accounts/login/', 'django.contrib.auth.views.login', name='login', kwargs={'template_name': 'login.html'}),
-    url(r'^accounts/logout/', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': 'login'}),
-    url(r'^accounts/passwordchange/', 'django.contrib.auth.views.password_change', {'post_change_redirect': 'login'}, name='passwordchange'),
-    url(r'^accounts/signup/', 'giza.views.sign_up', name='signup'),
-    url(r'^accounts/checkduplication/', 'giza.views.check_duplication', name='check duplication'),
-    url(r'^accounts/checkvalidation/', 'giza.views.check_validation', name='check validation'),
-    url(r'^accounts/checkemail/', 'giza.views.check_email', name='check email'),
-    url(r'^accounts/sendemail/', 'giza.views.send_email', name='send email'),
-    url(r'^$', 'issue.views.show_today_issues', name="show today"),
-    url(r'^(?P<nolook>\w+)$', 'issue.views.show_today_issues', name="show today+"),
-    url(r'^all/(?P<nolook>\w+)$', 'issue.views.show_today_all', name="show today all"),
+    url(
+        r'^accounts/login/$',
+        'django.contrib.auth.views.login',
+        name='login',
+        kwargs={'template_name': 'login.html'}
+    ),
+    url(
+        r'^accounts/logout/$',
+        'django.contrib.auth.views.logout',
+        name='logout',
+        kwargs={'next_page': 'login'}
+    ),
+    url(
+        r'^accounts/passwordchange/$',
+        'django.contrib.auth.views.password_change',
+        name='passwordchange'
+    ),
+    url(
+        r'^accounts/passwordreset/$',
+        'django.contrib.auth.views.password_reset',
+        name='passwordreset'
+    ),
+    url(r'^$', 'issue.views.show_news', name="show news"),
+    url(r'^(?P<page>\d+)$', 'issue.views.show_news', name="show news+"),
     url(r'^best/$', 'issue.views.show_issues', name="show issues"),
-    url(r'^best/(?P<nolook>\w+)$', 'issue.views.show_issues', name="show good issues"),
+    url(r'^best/(?P<nolook>\w+)$', 'issue.views.show_issues', name="show issues+"),
     url(r'^best/(?P<page>\d+)/(?P<nolook>\w+)$', 'issue.views.show_best_issues', name="show best issues"),
-    url(r'^issue/all/(?P<nolook>\w+)$', 'issue.views.show_all_issues', name="show all issues"),
-    url(r'^ranking/$', 'issue.views.ranking', name="ranking"),
-    url(r'^ranking/(?P<nolook>\w+)$', 'issue.views.ranking', name="ranqueen"),
+    url(r'^ranking/$', 'issue.views.ranking', name="ranking default"),
+    url(r'^ranking/(?P<nolook>\w+)$', 'issue.views.ranking', name="ranking"),
+    url(r'^ranking/(?P<ranktype>\w+)/(?P<nolook>\w+)$', 'issue.views.ranking', name="rank all"),
     url(r'^ranking/(?P<year>\d+)/(?P<month>\d+)/(?P<nolook>\w+)$', 'issue.views.rank_archive', name="rank archive"),
+    url(r'^ranking/(?P<year>\d+)/(?P<month>\d+)/(?P<nolook>\w+)/(?P<day>\d+)$', 'issue.views.rank_archive', name="rank specify"),
     url(r'^issue/new/(?P<nolook>\w+)$', 'issue.views.new_issue', name="new issue"),
     url(r'^issue/(?P<id>\d+)/edit/$', 'issue.views.edit_issue', name="edit issue"),
     url(r'^issue/(?P<id>\d+)/delete/$', 'issue.views.delete_issue', name="delete issue"),
-    url(r'^issue/search/(?P<searchRange>\w+)/(?P<searchType>.*)/(?P<searchWord>.*)/(?P<nolook>\w+)$', 'issue.views.search_issue', name="search issue"),
-    url(r'^issue/(?P<id>\d+)/thumb_down/$', 'issue.views.thumb_down', name="thumb down"),
-    url(r'^issue/(?P<id>\d+)/thumb_up/$', 'issue.views.thumb_up', name="thumb up"),
-    url(r'^db/all/$', 'giza.views.show_all_giza', name="show all giza"),
-    url(r'^db/$', 'giza.views.show_giza', name="show giza"),
-    url(r'^db/new/$', 'giza.views.new_giza', name="new giza"),
-    url(r'^db/(?P<id>\d+)/edit/$', 'giza.views.edit_giza', name="edit giza"),
-    url(r'^db/(?P<id>\d+)/delete/$', 'giza.views.delete_giza', name="delete giza"),
-    url(r'^db/search/(?P<searchType>.*)/(?P<searchWord>.*)/$', 'giza.views.search_giza', name="search giza"),
-    url(r'^api/call/$', views.api_issue),
+    url(r'^issue/search/(?P<search_range>\w+)/(?P<search_type>.*)/(?P<search_word>.*)/(?P<nolook>\w+)$', 'issue.views.search_issue', name="search issue"),
+    url(r'^issue/search/(?P<search_range>\w+)/(?P<search_type>\w+)/(?P<search_word>.*)/(?P<nolook>\w+)/(?P<page>\d+)/$', 'issue.views.search_issue', name="search issue+"),
+    url(r'^chart/(?P<year>\d+)/(?P<month>\d+)/$', 'issue.views.chart_archive', name="chart archive", kwargs={'chartfrom': 'archive'}),
+    url(r'^chart/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)/$', 'issue.views.chart_archive', name="chart specify", kwargs={'chartfrom': 'specify'}),
+    url(r'^chart/$', 'issue.views.chart', name="chart"),
+    url(r'^podcast/(?P<pod>\w+)/$', 'core.views.podcast', name="podcast"),
+    url(r'^db/', include('giza.urls', namespace='giza')),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^api/', include('core.apiurls', namespace='api')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

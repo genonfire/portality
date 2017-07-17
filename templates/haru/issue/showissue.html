@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}노룩뉴스{% endblock %}
+{% block extra_head_content %}
+{{ block.super }}
+{% load tz datetime %}
+<script src="{% static 'js/jquery-3.1.1.min.js' %}" /></script>
+<script>
+function search(search_range, nolook) {
+    var type = document.getElementById('searchType').value;
+    var word = document.getElementById('searchWord').value.replace(/\s+$/, '');
+    if (!word) {
+        alert("검색어를 입력하세요.");
+        return;
+    }
+    var url = "{% url 'search issue' search_range='search_range' search_type='type' search_word='word' nolook='nolook' %}".replace(/search_range/, search_range).replace(/type/, type).replace(/word/, word).replace(/nolook/, nolook).replace(/http:\/\//, '').replace(/https:\/\//, '').replace(/twitter.com\//, '').replace(/facebook.com\//, '');
+    if (url.substr(-1) == '/') {
+        url = url.slice(0, -1);
+    }
+    location.href = url;
+}
+
+function onLoad() {
+    var iframe = document.getElementsByTagName('iframe');
+    if (iframe.length > 0)
+        $('#gense').hide();
+    else
+        $('#gense').show();
+
+    var search_type = '{{ search_type }}';
+    if (search_type && search_type != '') {
+        document.getElementById('searchType').value = search_type;
+    }
+}
+window.onload = onLoad;
+
+</script>
+{% endblock %}
+{% block content %}
+<div id="wrap">
+    <div id="header">
+        <div class="gnb">
+            <ul>
+                <li><a href="{% url 'show news' %}">노룩뉴스</a></li>
+                <li><a href="{% url 'show issues' %}">베스트</a></li>
+                <li><a href="{% url 'ranking default' %}">랭킹</a></li>
+                <li><a href="{% url 'chart' %}">차트</a></li>
+                <li><a href="{% url 'giza:show giza' %}">기자 DB</a></li>
+            </ul>
+        </div>
+    </div>
+
+<div id="contents">
+    <div class="contents_header">
+        {% if today == True %}
+            <h1>노룩뉴스</h1>
+        {% else %}
+            <h1>노룩 베스트</h1>
+        {% endif %}
+        <div class="float-right">
+            {% if user.is_authenticated and today == True %}
+                <span>
+                    <a href="{% url 'new issue' nolook=nolook %}">
+                        <img src="{% static 'icons/add24.png' %}" title="이슈 생성" class="header_icon">
+                    </a>
+                </span>
+            {% endif %}
+            <span>
+                <a href="{% url 'login' %}">
+                    {% if user.is_authenticated %}
+                        <img src="{% static 'icons/face24.png' %}" title="회원정보" class="header_icon">
+                    {% else %}
+                        <img src="{% static 'icons/identity24.png' %}" title="로그인 및 회원가입" class="header_icon">
+                    {% endif %}
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="annotation">
+    {% if search_type %}
+        {{search_word}} 검색 결과
+    {% elif today == True %}
+        <font color="#e02d31">신규기능</font> 버스터 콜을 사용해 보세요! <span><a href="/assets/html/howto_burstcall.html">사용법 보기</a></span>
+        {# 최근 일주일 내에 등록된 뉴스입니다. #}
+    {% else %}
+        {% if nolook == 'nolook' %}
+        <font color="#e02d31">'나빠요!'</font>를 많이 받은 뉴스가 자동 등록됩니다.<span><a href="{% url 'show issues+' nolook='look' %}">좋아요! 보기</a></span>
+        {% elif nolook == 'look' %}
+        <font color="#1e88e5">'좋아요!'</font>를 많이 받은 뉴스가 자동 등록됩니다.<span><a href="{% url 'show issues' %}">나빠요! 보기</a></span>
+        {% else %}
+        검색 결과
+        {% endif %}
+    {% endif %}
+    </div>
+
+    <div class="issue">
+    {% for issue, photo in issues %}
+        <table class="issue">
+        <tr>
+            <td rowspan="2" class="issuePhoto" align="center">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'edit issue' id=issue.id %}">
+                {% endif %}
+                {% if photo %}
+                    <img src={{photo.url}} width="60px" height="80px">
+                {% else %}
+                    <img src="{% static 'images/nophoto.png' %}" width="60px" height="80px">
+                {% endif %}
+                {% if user.is_authenticated %}
+                    </a>
+                {% endif %}
+            </td>
+            <td class="issueSubject">
+                <a href="{{issue.url}}" target="_blank">
+                    {{issue.subject}}
+                </a>
+                {% if issue.archive %}
+                    <a href="{{issue.archive}}" target="_blank" class="archive">
+                        <img src="{% static 'icons/unarchive18.png' %}">
+                    </a>
+                {% endif %}
+            </td>
+            {% if user.is_authenticated %}
+                <td rowspan="2" width="32px" class="editIssue">
+                    <a href="{% url 'edit issue' id=issue.id %}" class="editIcon">
+                        <img src="{% static 'icons/edit24.png' %}" title="편집">
+                    </a>
+                </td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td class="issueDown">
+                <a href="{% url 'giza:search giza' search_type='email' search_word=issue.email %}" title="기자 정보 보기">
+                    {{issue.email}}
+                </a>
+                {% if nolook == 'all' %}
+                    (나빠요! <font color="#e02d31"><span id="thumb_down_msg{{issue.id}}">{{issue.count}}</span></font> | 좋아요! <font color="#1e88e5"><span id="thumb_up_msg{{issue.id}}">{{issue.goodcount}}</span></font>)
+                {% else %}
+                    ({% if nolook == 'nolook' %}나빠요! <font color="#e02d31"><span id="thumb_down_msg{{issue.id}}">{{issue.count}}</span></font>{% else %}좋아요! <font color="#e02d31"><span id="thumb_up_msg{{issue.id}}">{{issue.goodcount}}</span></font>{% endif %})
+                {% endif %}
+                <span>
+                </span>
+                <span class="thumb">
+                    {{issue.datetime|date:" Y-m-d H:i:s"}}
+                    <a href="javascript:void(0)" onClick="javascript:thumb_down({{issue.id}});return false;">
+                        <img src="{% static 'icons/thumb_down18.png' %}" title="나빠요!">
+                    </a>
+                    <a href="javascript:void(0)" onClick="javascript:thumb_up({{issue.id}});return false;">
+                        <img src="{% static 'icons/thumb_up18.png' %}" title="좋아요!">
+                    </a>
+                </span>
+                {% if burst_call %}
+                    {% if issue.datetime|localtime|is_inweek %}
+                    <span class="thumb burstcall">
+                        <a href="javascript:void(0)" onClick="javascript:burst_call({{issue.id}}, '{{nolook}}');return false;">
+                            <img src="{% static 'icons/burstcall64.png' %}" width="22px" height="22px" title="포인트를 모두 소진해 버스터 콜을 날립니다.">
+                        </a>
+                    </span>
+                    {% endif %}
+                {% endif %}
+                <span id="thumb_message{{issue.id}}" class="thumb"></span>
+            </td>
+        </tr>
+        </table>
+        {% if not forloop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <form>
+        {% csrf_token %}
+    </form>
+
+    {% if total %}
+    <div class="dbSearch align-center">
+    총 {{ total }}개의 뉴스가 있습니다. ({{currentIndex}} / {{ total }})
+        {% if search_type %}
+            {% if prevPage %}
+            <span><a href="{% url 'search issue+' search_range=search_range search_type=search_type search_word=search_word nolook=nolook page=prevPage %}">이전</a></span>
+            {% endif %}
+            {% if nextPage %}
+            <span><a href="{% url 'search issue+' search_range=search_range search_type=search_type search_word=search_word nolook=nolook page=nextPage %}">다음</a></span>
+            {% endif %}
+        {% elif today == True %}
+            {% if prevPage %}
+            <span><a href="{% url 'show news+' page=prevPage %}">이전</a></span>
+            {% endif %}
+            {% if nextPage %}
+            <span><a href="{% url 'show news+' page=nextPage %}">다음</a></span>
+            {% endif %}
+        {% else %}
+            {% if prevPage %}
+            <span><a href="{% url 'show best issues' page=prevPage nolook=nolook %}">이전</a></span>
+            {% endif %}
+            {% if nextPage %}
+            <span><a href="{% url 'show best issues' page=nextPage nolook=nolook %}">다음</a></span>
+            {% endif %}
+        {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="dbSearch align-center">
+        <select id="searchType">
+            <option value="belongto">언론사</option>
+            <option value="name">기자 이름</option>
+            <option value="email">기자 이메일</option>
+            <option value="subject">기사 제목</option>
+            <option value="url">기자 URL</option>
+        </select>
+        <input type="text" id="searchWord" class="searchWord" maxlength="254" onkeypress="onKeyPress(event, '{{search_range}}', '{{nolook}}')">
+        <input type="button" id="searchButton" value="검색" class="searchButton" onClick="search('{{search_range}}', '{{nolook}}')">
+    </div>
+
+    {% if not DEBUG %}
+    <div class="sense">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- nolooknews-bottom -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-6024742495031342"
+         data-ad-slot="8980979712"
+         data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    </div>
+    {% endif %}
+    <div id="gense" class="gense">
+    <a href={{NEWBC_LINK}} target="_blank"><img src={{NEWBC_IMG}}></a>
+    </div>
+
+</div> <!-- //Contents -->
+
+<div id="footer">
+    <div class="footerMenu">
+        <ul>
+            {{ FOOTER_TAGS|safe }}
+        </ul>
+    </div>
+</div>
+
+</div> <!-- //wrap -->
+
+<script src="{% static 'js/issue.js' %}" async></script>
+{% endblock %}

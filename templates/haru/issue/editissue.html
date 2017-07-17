@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}이슈 편집{% endblock %}
+{% block extra_head_content %}
+{{ block.super }}
+<script src="{% static 'js/jquery-3.1.1.min.js' %}" /></script>
+{% endblock %}
+{% block content %}
+
+<div id="wrap">
+    <div id="header">
+        <div class="gnb">
+            <ul>
+                <li><a href="{% url 'show news' %}">노룩뉴스</a></li>
+                <li><a href="{% url 'show issues' %}">베스트</a></li>
+                <li><a href="{% url 'ranking default' %}">랭킹</a></li>
+                <li><a href="{% url 'chart' %}">차트</a></li>
+                <li><a href="{% url 'giza:show giza' %}">기자 DB</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="contents">
+        {% if created_at %}
+            <h1>기사 편집</h1>
+            <div class="annotation">
+                입력: {{created_at|date:"Y-m-d H:i:s"}} | 좋아요!: {{goodcount}} 나빠요!: {{count}}
+            </div>
+        {% else %}
+            <h1>기사 추가</h1>
+            <div class="annotation">
+                새 뉴스를 추가합니다.
+            </div>
+        {% endif %}
+        <form
+            id="issue_edit_form"
+            method="POST"
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.errors }}
+            {{ form.non_field_errors }}
+
+            <div class="input_required">
+                <div class="input_subject">
+                    <div class="input_description">
+                        기사 제목
+                    </div>
+                    <div>
+                        {{form.subject}}
+                    </div>
+                </div>
+                <div class="input_url">
+                    <div class="input_description">
+                        기사 주소
+                    </div>
+                    {{form.url}}
+                </div>
+            </div>
+            <div class="input_optional">
+                <div class="input_email">
+                    기자 이메일: {{form.email}}
+                </div>
+                <div class="input_archive">
+                    아카이브 주소: {{form.archive}}
+                </div>
+                <div class="archive_subscription">
+                    - archive.is 의 스냅샷 주소
+                </div>
+            </div>
+            <div class="input_buttons">
+                <input type="submit">
+                <input type="hidden" id="next" name="next" value={{next}} />
+            </div>
+        </form>
+        {% if user.is_superuser and created_at %}
+            <script>
+            function checkDelete(deleteText) {
+                if (deleteText == 'delete')
+                    location.href = "{% url 'delete issue' id=id %}";
+            }
+            </script>
+            <div class="delete">
+                <div class="delete_subscription">
+                    삭제하려면 <font color="red"><b>delete</b></font> 입력 후 삭제 버튼을 누르세요.
+                </div>
+                <div class="delete_input">
+                    <input id="delbox" type="text" size="8">
+                    <input type="button" value="삭제" style="border-color:red" onclick="checkDelete(document.getElementById('delbox').value)">
+                </div>
+            </div>
+        {% endif %}
+
+    </div> <!--//contents-->
+
+    <div id="footer">
+        <div class="footerMenu">
+            <ul>
+                {{ FOOTER_TAGS|safe }}
+            </ul>
+        </div>
+    </div>
+
+</div> <!-- //wrap -->
+
+<script>
+$('#issue_edit_form').submit(function(e) {
+    id_archive = $('#id_archive').val();
+    if (id_archive) {
+        url = "http://" + id_archive.replace(/http:\/\//, '').replace(/https:\/\//, '');
+        $('#id_archive').val(url);
+    }
+});
+</script>
+{% endblock %}
