@@ -1,6 +1,6 @@
 appdirs==1.4.3
 crypto==1.4.1
-Django==1.8.17
+Django==1.11.29
 django-allauth==0.32.0
 django-graphos==0.3.41
 django-verified-email-field==1.2.2
