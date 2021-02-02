@@ -9,7 +9,7 @@ Naked==0.1.31
 oauthlib==2.0.2
 olefile==0.44
 packaging==16.8
-Pillow==4.1.1
+Pillow==7.1.0
 psycopg2==2.7.1
 pyparsing==2.2.0
 python-openid==2.2.5
